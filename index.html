@@ -475,7 +475,7 @@
 <script type="module">
     // --- FIREBASE SDK IMPORTS ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc, updateDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc, updateDoc, query, where, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     
     // --- FIREBASE CONFIGURATION ---
@@ -1224,12 +1224,12 @@
             
             try {
                 await addDoc(collection(db, "reservations"), newReservation);
-                await addDoc(collection(db, "notifications"), { 
-                    text: `Nova reserva de "${item.title}" por ${currentUser.name}.`, 
-                    unread: true, 
-                    timestamp: serverTimestamp(), 
-                    userId: null 
-                });
+await addDoc(collection(db, "notifications"), { 
+    text: `Nova reserva de "${item.title}" por ${currentUser.name}.`, 
+    unread: true, 
+    timestamp: Timestamp.now(), // <-- Linha modificada
+    userId: null 
+});
                 
                 await fetchAllData();
                 updateAll();
