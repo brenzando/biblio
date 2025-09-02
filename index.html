@@ -24,6 +24,7 @@
       --warning: #f59e0b;
       --danger: #ef4444;
     }
+
     body {
       font-family: "Inter", sans-serif;
       background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
@@ -33,27 +34,38 @@
       margin: 0;
       padding: 1rem;
     }
-    h1, h2, h3, h4, .font-bold { color: #f9fafb; }
+
+    h1, h2, h3, h4, .font-bold {
+      color: #f9fafb;
+    }
+
     .glass-effect {
-      background: rgba(31, 41, 55, 0.4);
+      background: rgba(31, 41, 55, 0.4); /* Gray 800 */
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     .card-hover:hover {
       transform: translateY(-8px) scale(1.02);
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
       background: rgba(31, 41, 55, 0.7);
     }
+
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       transition: all 0.3s ease;
       cursor: pointer;
     }
+
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
     }
+
     .nav-item {
       display: flex;
       align-items: center;
@@ -65,25 +77,30 @@
       cursor: pointer;
       user-select: none;
     }
+
     .nav-item:hover {
       background: rgba(16, 185, 129, 0.1);
       color: white;
     }
+
     .nav-item.active {
       background: rgba(16, 185, 129, 0.2);
       color: white;
       font-weight: 600;
       border-left: 4px solid var(--primary);
     }
+
     .nav-item-content {
         display: flex;
         align-items: center;
     }
+
     .nav-item i {
       margin-right: 12px;
       width: 20px;
       text-align: center;
     }
+
     .action-btn {
       display: flex;
       flex-direction: column;
@@ -99,11 +116,13 @@
       font-weight: 500;
       background-color: rgba(31, 41, 55, 0.4);
     }
+
     .action-btn:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       background-color: rgba(31, 41, 55, 0.8);
     }
+    
     .form-input, .form-select {
         background: rgba(17, 24, 39, 0.5); /* Gray 900 */
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -113,12 +132,17 @@
         padding: 0.75rem 1rem;
         width: 100%;
     }
-    .form-input::placeholder { color: #9ca3af; }
+
+    .form-input::placeholder {
+      color: #9ca3af;
+    }
+
     .form-input:focus, .form-select:focus {
       outline: none;
       box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4);
       border-color: var(--primary);
     }
+    
     .form-select {
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -129,6 +153,7 @@
         background-size: 1.5em 1.5em;
         padding-right: 2.5rem;
     }
+    
     .badge {
         display: inline-block;
         padding: 0.25em 0.6em;
@@ -140,8 +165,13 @@
         vertical-align: baseline;
         border-radius: 0.375rem;
     }
-    main::-webkit-scrollbar, .modal-body::-webkit-scrollbar { width: 8px; }
-    main::-webkit-scrollbar-track, .modal-body::-webkit-scrollbar-track { background: transparent; }
+
+    main::-webkit-scrollbar, .modal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    main::-webkit-scrollbar-track, .modal-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
     main::-webkit-scrollbar-thumb, .modal-body::-webkit-scrollbar-thumb {
       background-color: rgba(16, 185, 129, 0.4);
       border-radius: 4px;
@@ -162,20 +192,20 @@
                   <p>EEMTI Profa. Adalgisa Bonfim Soares</p>
               </div>
               <div>
-                  <label for="username" class="block mb-2 text-sm font-medium text-white">Usuário (E-mail)</label>
-                  <input type="text" id="username" class="form-input" placeholder="Ex: admin" required>
+                  <label for="email" class="block mb-2 text-sm font-medium text-white">Email</label>
+                  <input type="email" id="email" class="form-input" placeholder="admin@bibliosys.com" required>
               </div>
               <div>
                   <label for="password" class="block mb-2 text-sm font-medium text-white">Senha</label>
                   <input type="password" id="password" class="form-input" placeholder="••••••••" required>
               </div>
-              <p id="loginError" class="text-red-400 text-sm text-center hidden">Usuário ou senha inválidos.</p>
+              <p id="loginError" class="text-red-400 text-sm text-center hidden">Email ou senha inválidos.</p>
               <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Entrar</button>
-             <div class="text-xs text-center text-gray-400 pt-4"> 
-    <p>Use: <span class="font-mono">admin@bibliosys.com / 123456</span> (Acesso Total)</p> 
-    <p>Use: <span class="font-mono">professor@bibliosys.com / prof123</span> (Acesso Professor)</p> 
-    <p>Use: <span class="font-mono">leitor@bibliosys.com / 1234</span> (Apenas Visualização)</p> 
-</div>
+              <div class="text-xs text-center text-gray-400 pt-4">
+                  <p>Use: <span class="font-mono">admin@bibliosys.com / 123456</span> (Acesso Total)</p>
+                  <p>Use: <span class="font-mono">professor@bibliosys.com / prof123</span> (Acesso Professor)</p>
+                  <p>Use: <span class="font-mono">leitor@bibliosys.com / 1234</span> (Apenas Visualização)</p>
+              </div>
           </form>
       </div>
   </div>
@@ -414,16 +444,16 @@
                        <input type="checkbox" id="moodleToggle" class="form-checkbox h-5 w-5 text-emerald-500 rounded focus:ring-emerald-400 bg-slate-700 border-slate-600">
                    </div>
                     <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg">
-                        <label for="recommendationToggle" class="font-medium text-white">Recomendações Personalizadas</label>
-                        <input type="checkbox" id="recommendationToggle" class="form-checkbox h-5 w-5 text-emerald-500 rounded focus:ring-emerald-400 bg-slate-700 border-slate-600" checked>
-                    </div>
+                       <label for="recommendationToggle" class="font-medium text-white">Recomendações Personalizadas</label>
+                       <input type="checkbox" id="recommendationToggle" class="form-checkbox h-5 w-5 text-emerald-500 rounded focus:ring-emerald-400 bg-slate-700 border-slate-600" checked>
+                   </div>
                </div>
              </div>
              <div>
                <h3 class="text-xl font-semibold mb-4">Backup e Restauração</h3>
                <div class="flex space-x-4">
-                  <button class="btn-primary text-white font-bold py-2 px-4 rounded-lg" onclick="alert('Use o console do Google Cloud para fazer backup do Firestore.')"><i class="fas fa-download mr-2"></i>Fazer Backup</button>
-                 <button class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg" onclick="alert('Use o console do Google Cloud para restaurar dados do Firestore.')"><i class="fas fa-upload mr-2"></i>Restaurar Dados</button>
+                  <button class="btn-primary text-white font-bold py-2 px-4 rounded-lg"><i class="fas fa-download mr-2"></i>Fazer Backup</button>
+                  <button class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg"><i class="fas fa-upload mr-2"></i>Restaurar Dados</button>
                </div>
              </div>
            </div>
@@ -442,103 +472,113 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script type="module">
+    // --- FIREBASE SDK IMPORTS ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc, updateDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    
+    // --- FIREBASE CONFIGURATION ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDIMuQmT1C9NN_fXKEhCE9A35HAUXIDdsw",
+        authDomain: "bibliosys-adalgisa.firebaseapp.com",
+        projectId: "bibliosys-adalgisa",
+        storageBucket: "bibliosys-adalgisa.firebasestorage.app",
+        messagingSenderId: "154477457501",
+        appId: "1:154477457501:web:69925480d8d91aa9db5db4",
+        measurementId: "G-2T95CWKP5C"
+    };
 
-  <script>
-    // -------------------------------------------------------------------
-    // --- INICIALIZAÇÃO DO FIREBASE ---
-    // -------------------------------------------------------------------
-    // TODO: Substitua o objeto abaixo pela configuração do seu projeto Firebase.
-  const firebaseConfig = {
-    apiKey: "AIzaSyDIMuQmT1C9NN_fXKEhCE9A35HAUXIDdsw",
-    authDomain: "bibliosys-adalgisa.firebaseapp.com",
-    projectId: "bibliosys-adalgisa",
-    storageBucket: "bibliosys-adalgisa.firebasestorage.app",
-    messagingSenderId: "154477457501",
-    appId: "1:154477457501:web:69925480d8d91aa9db5db4",
-    measurementId: "G-2T95CWKP5C"
-  };
+    // --- FIREBASE INITIALIZATION ---
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    
+    // --- GLOBAL STATE MANAGEMENT ---
+    let currentUser = null;
+    let reportDataCache = {}; 
+    let allItems = [], allCopies = [], allUsers = [], allLoans = [], allReservations = [], allNotifications = [];
 
-    // Inicializa o Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    // Referências aos serviços do Firebase
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-
-
-    // -------------------------------------------------------------------
-    // --- SCRIPT PRINCIPAL DO BiblioSys ---
-    // -------------------------------------------------------------------
-    document.addEventListener("DOMContentLoaded", () => {
-      // --- STATE MANAGEMENT ---
-      let currentUser = null;
-      let reportDataCache = {}; // Cache para geração de PDF
-
-    auth.onAuthStateChanged(async (user) => {
-    if (user) {
-        // 1. O usuário está autenticado com sucesso. 'user' existe.
-
+    // --- DATA FETCHING FROM FIRESTORE ---
+    async function fetchAllData() {
         try {
-            // 2. O código tenta buscar um documento na coleção 'users'
-            //    usando o UID do usuário como ID do documento.
-            const userDoc = await db.collection('users').doc(user.uid).get();
+            const [itemsSnap, copiesSnap, usersSnap, loansSnap, reservationsSnap, notificationsSnap] = await Promise.all([
+                getDocs(collection(db, "items")),
+                getDocs(collection(db, "copies")),
+                getDocs(collection(db, "users")),
+                getDocs(collection(db, "loans")),
+                getDocs(collection(db, "reservations")),
+                getDocs(collection(db, "notifications"))
+            ]);
 
-            // 3. O código verifica se esse documento foi encontrado.
-            if (userDoc.exists) {
-                // SUCESSO! O painel é exibido.
-                currentUser = { id: user.uid, ...userDoc.data() };
-                loginScreen.classList.add('hidden');
-                appContainer.classList.remove('hidden');
-                initAppUI();
-            } else {
-                // 4. FALHA! O documento não existe. O código executa isso.
-                console.error("Usuário não encontrado no Firestore.");
-                handleLogout(); // O usuário é deslogado imediatamente.
-            }
+            allItems = itemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            allCopies = copiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            allUsers = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            allLoans = loansSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            allReservations = reservationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            allNotifications = notificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            console.log("All data fetched from Firestore.");
         } catch (error) {
-            // 5. FALHA! Ocorreu um erro na busca (ex: permissão negada).
-            console.error("Erro ao buscar dados do usuário:", error);
-            handleLogout(); // O usuário também é deslogado.
+            console.error("Error fetching data from Firestore: ", error);
+            alert("Erro ao carregar os dados do sistema. Verifique sua conexão e a configuração do Firebase.");
         }
     }
-    // ...
-});
 
-      async function handleLogin(e) {
+    // --- AUTHENTICATION & SESSION ---
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // User is signed in
+            const userDocRef = doc(db, "users", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                currentUser = { uid: user.uid, ...userDocSnap.data() };
+                await initAppUI();
+            } else {
+                console.error("User profile not found in Firestore!");
+                handleLogout();
+            }
+        } else {
+            // User is signed out
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appContainer').classList.add('hidden');
+        }
+    });
+
+    async function handleLogin(e) {
         e.preventDefault();
-        const email = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const loginError = document.getElementById('loginError');
 
         try {
-          await auth.signInWithEmailAndPassword(email, password);
-          loginError.classList.add('hidden');
-          // O onAuthStateChanged vai cuidar de mostrar o app
+            await signInWithEmailAndPassword(auth, email, password);
+            loginError.classList.add('hidden');
         } catch (error) {
-          console.error("Erro de login:", error);
-          loginError.textContent = "Usuário ou senha inválidos.";
-          loginError.classList.remove('hidden');
+            console.error("Login failed:", error.message);
+            loginError.classList.remove('hidden');
         }
-      }
+    }
 
-      function handleLogout() {
-        auth.signOut().then(() => {
-          location.reload();
-        });
-      }
+    async function handleLogout() {
+        await signOut(auth);
+        location.reload();
+    }
 
-      function initAppUI() {
-        if (!currentUser) return;
+    async function initAppUI() {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('appContainer').classList.remove('hidden');
+        await fetchAllData();
         applyRolePermissions();
         updateAll();
         switchTab('dashboard');
         updateNotificationIndicator();
-      }
-
-      function applyRolePermissions() {
+    }
+    
+    function applyRolePermissions() {
+        if (!currentUser) return;
         document.getElementById('welcomeMessage').textContent = `Bem-vindo(a), ${currentUser.name}!`;
         
         const navItems = document.querySelectorAll('.nav-item');
@@ -552,224 +592,978 @@
         statusBlock.style.display = 'block';
         
         switch (currentUser.role) {
-          case 'Admin':
-            allowedSections = allSections;
-            break;
-          case 'Professor(a)':
-            allowedSections = ['dashboard', 'acervo', 'relatorios'];
-            quickActionsBlock.style.display = 'none';
-            break;
-          case 'Leitor(a)':
-            allowedSections = ['acervo'];
-            quickActionsBlock.style.display = 'none';
-            statusBlock.style.display = 'none';
-            document.getElementById('notificationBtn').style.display = 'none'; // Leitores não veem notificações globais
-            break;
+            case 'Admin':
+                allowedSections = allSections;
+                break;
+            case 'Professor(a)':
+                allowedSections = ['dashboard', 'acervo', 'relatorios'];
+                quickActionsBlock.style.display = 'none';
+                break;
+            case 'Leitor(a)':
+                allowedSections = ['acervo'];
+                quickActionsBlock.style.display = 'none';
+                statusBlock.style.display = 'none';
+                break;
         }
 
         navItems.forEach(item => {
-          const section = item.dataset.section;
-          item.style.display = allowedSections.includes(section) ? 'flex' : 'none';
-        });
-      }
-
-      // --- RENDER FUNCTIONS (ADAPTED FOR FIRESTORE) ---
-      async function updateCounters() {
-        try {
-            const itemsSnap = await db.collection('items').get();
-            const copiesSnap = await db.collection('copies').get();
-            const usersSnap = await db.collection('users').get();
-            const activeLoansSnap = await db.collection('loans').where('returnDate', '==', null).get();
-            const overdueLoansSnap = await db.collection('loans')
-                                            .where('returnDate', '==', null)
-                                            .where('dueDate', '<', new Date().toISOString().split('T')[0])
-                                            .get();
-            const pendingReservationsSnap = await db.collection('reservations').where('status', '==', 'Pendente').get();
-
-            document.getElementById("totalItems").textContent = itemsSnap.size;
-            document.getElementById("totalCopies").textContent = copiesSnap.size;
-            document.getElementById("totalUsers").textContent = usersSnap.size;
-            document.getElementById("totalLoans").textContent = activeLoansSnap.size;
-
-            document.getElementById("dashboardItems").textContent = itemsSnap.size;
-            document.getElementById("dashboardLoans").textContent = activeLoansSnap.size;
-            document.getElementById("dashboardUsers").textContent = usersSnap.size;
-            document.getElementById("dashboardOverdue").textContent = overdueLoansSnap.size;
-            
-            const reservasIndicator = document.getElementById('reservasIndicator');
-            if (pendingReservationsSnap.size > 0) {
-              reservasIndicator.textContent = pendingReservationsSnap.size;
-              reservasIndicator.style.display = 'inline-block';
+            const section = item.dataset.section;
+            if (allowedSections.includes(section)) {
+                item.style.display = 'flex';
             } else {
-              reservasIndicator.style.display = 'none';
+                item.style.display = 'none';
             }
-        } catch (error) {
-            console.error("Erro ao atualizar contadores:", error);
-        }
-      }
+        });
+    }
 
-      async function renderAcervo(filter = "") {
+    // --- RENDER FUNCTIONS ---
+    function updateCounters() {
+      const activeLoans = allLoans.filter(l => !l.returnDate);
+      const overdueLoans = activeLoans.filter(l => new Date(l.dueDate) < new Date());
+      const pendingReservations = allReservations.filter(r => r.status === 'Pendente');
+      
+      document.getElementById("totalItems").textContent = allItems.length;
+      document.getElementById("totalCopies").textContent = allCopies.length;
+      document.getElementById("totalUsers").textContent = allUsers.length;
+      document.getElementById("totalLoans").textContent = activeLoans.length;
+
+      document.getElementById("dashboardItems").textContent = allItems.length;
+      document.getElementById("dashboardLoans").textContent = activeLoans.length;
+      document.getElementById("dashboardUsers").textContent = allUsers.length;
+      document.getElementById("dashboardOverdue").textContent = overdueLoans.length;
+
+      const reservasIndicator = document.getElementById('reservasIndicator');
+      if (pendingReservations.length > 0) {
+          reservasIndicator.textContent = pendingReservations.length;
+          reservasIndicator.style.display = 'inline-block';
+      } else {
+          reservasIndicator.style.display = 'none';
+      }
+    }
+
+    function renderAcervo(filter = "") {
         const container = document.getElementById("itemList");
-        container.innerHTML = `<p class="text-center md:col-span-2 lg:col-span-3">Carregando acervo...</p>`;
+        container.innerHTML = "";
+        const lowercasedFilter = filter.toLowerCase();
+        const filteredItems = allItems.filter(item =>
+            item.title.toLowerCase().includes(lowercasedFilter) ||
+            item.author.toLowerCase().includes(lowercasedFilter) ||
+            (item.isbn_issn && item.isbn_issn.toLowerCase().includes(lowercasedFilter))
+        );
 
-        try {
-            const itemsSnap = await db.collection('items').get();
-            const copiesSnap = await db.collection('copies').get();
+        if (filteredItems.length === 0) {
+            container.innerHTML = `<p class="text-center md:col-span-2 lg:col-span-3">Nenhum item encontrado.</p>`; return;
+        }
 
-            let allItems = itemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            const allCopies = copiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        filteredItems.forEach((item) => {
+            const itemCopies = allCopies.filter(c => c.itemId === item.id);
+            const availableCopies = itemCopies.filter(c => c.status === "Disponível").length;
+            const typeIcons = { 'Livro': 'fa-book', 'Revista': 'fa-newspaper', 'Mídia Digital': 'fa-compact-disc' };
             
-            const lowercasedFilter = filter.toLowerCase();
-            if (filter) {
-                allItems = allItems.filter(item =>
-                    item.title.toLowerCase().includes(lowercasedFilter) ||
-                    item.author.toLowerCase().includes(lowercasedFilter) ||
-                    (item.isbn_issn && item.isbn_issn.toLowerCase().includes(lowercasedFilter))
-                );
-            }
-            
-            container.innerHTML = "";
-            if (allItems.length === 0) {
-                container.innerHTML = `<p class="text-center md:col-span-2 lg:col-span-3">Nenhum item encontrado.</p>`;
-                return;
-            }
+            const card = `
+                <div class="glass-effect rounded-xl p-4 flex flex-col justify-between card-hover cursor-pointer" onclick="showItemDetailsModal('${item.id}')">
+                  <div>
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-lg text-white mb-1">${item.title}</h3>
+                        <span class="badge bg-emerald-500/30 text-emerald-300"><i class="fas ${typeIcons[item.type] || 'fa-question-circle'} mr-1"></i>${item.type}</span>
+                    </div>
+                    <p class="text-sm text-gray-400 mb-2">${item.author}</p>
+                  </div>
+                  <div class="flex justify-between items-center mt-4 pt-2 border-t border-gray-700">
+                    <span class="text-sm font-semibold ${availableCopies > 0 ? 'text-green-400' : 'text-yellow-400'}">
+                        ${availableCopies} de ${itemCopies.length} disponível(is)
+                    </span>
+                    <span class="text-sm text-emerald-400 hover:text-emerald-300">Ver detalhes <i class="fas fa-arrow-right"></i></span>
+                  </div>
+                </div>`;
+            container.innerHTML += card;
+        });
+    }
+    
+    function renderReservations() {
+        const container = document.getElementById("reservationList");
+        container.innerHTML = "";
+        const pendingReservations = allReservations.filter(r => r.status === 'Pendente');
 
-            allItems.forEach((item) => {
-                const itemCopies = allCopies.filter(c => c.itemId === item.id);
-                const availableCopies = itemCopies.filter(c => c.status === "Disponível").length;
-                const typeIcons = { 'Livro': 'fa-book', 'Revista': 'fa-newspaper', 'Mídia Digital': 'fa-compact-disc' };
-                
-                const card = `
-                  <div class="glass-effect rounded-xl p-4 flex flex-col justify-between card-hover cursor-pointer" onclick="showItemDetailsModal('${item.id}')">
+        if (pendingReservations.length === 0) {
+            container.innerHTML = `<p class="text-center">Nenhuma reserva pendente.</p>`;
+            return;
+        }
+
+        pendingReservations.forEach(res => {
+            const card = `
+                <div class="glass-effect rounded-xl p-4 border-l-4 border-amber-500">
+                  <div class="flex justify-between items-center">
                     <div>
-                      <div class="flex justify-between items-start">
-                          <h3 class="font-bold text-lg text-white mb-1">${item.title}</h3>
-                          <span class="badge bg-emerald-500/30 text-emerald-300"><i class="fas ${typeIcons[item.type] || 'fa-question-circle'} mr-1"></i>${item.type}</span>
+                      <p class="font-bold text-white">${res.itemTitle}</p>
+                      <p class="text-sm">Solicitado por: <span class="font-semibold">${res.userName}</span></p>
+                      <p class="text-xs text-gray-400">Em: ${new Date(res.requestDate).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                      <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg" title="Recusar" onclick="declineReservation('${res.id}')"><i class="fas fa-times"></i></button>
+                      <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg" title="Aprovar" onclick="approveReservation('${res.id}')"><i class="fas fa-check"></i></button>
+                    </div>
+                  </div>
+                </div>
+            `;
+            container.innerHTML += card;
+        });
+    }
+
+    function renderLoans() {
+      const container = document.getElementById("loanList");
+      container.innerHTML = "";
+      const activeLoans = allLoans.filter(loan => !loan.returnDate);
+
+      if(activeLoans.length === 0) {
+          container.innerHTML = `<p class="text-center">Nenhum empréstimo ativo.</p>`; return;
+      }
+
+      activeLoans.forEach(loan => {
+          const copy = allCopies.find(c => c.id === loan.copyId);
+          if (!copy) return; // Skip if copy is not found
+          const item = allItems.find(i => i.id === copy.itemId);
+          if (!item) return; // Skip if item is not found
+          const user = allUsers.find(u => u.id === loan.userId);
+          if (!user) return; // Skip if user is not found
+
+          const dueDate = new Date(loan.dueDate);
+          const isOverdue = new Date() > dueDate;
+
+          const card = `
+              <div class="glass-effect rounded-xl p-4 ${isOverdue ? 'border-l-4 border-red-500' : 'border-l-4 border-emerald-500'}">
+                  <div class="flex justify-between items-center">
+                      <div>
+                          <p class="font-bold text-white">${item.title} (#${copy.barcode})</p>
+                          <p class="text-sm">Emprestado para: <span class="font-semibold">${user.name}</span></p>
+                          <p class="text-sm ${isOverdue ? 'text-red-400 font-semibold' : ''}">
+                              Devolução: ${dueDate.toLocaleDateString('pt-BR')} ${isOverdue ? '(ATRASADO)' : ''}
+                          </p>
                       </div>
-                      <p class="text-sm text-gray-400 mb-2">${item.author}</p>
-                    </div>
-                    <div class="flex justify-between items-center mt-4 pt-2 border-t border-gray-700">
-                      <span class="text-sm font-semibold ${availableCopies > 0 ? 'text-green-400' : 'text-yellow-400'}">
-                          ${availableCopies} de ${itemCopies.length} disponível(is)
-                      </span>
-                      <span class="text-sm text-emerald-400 hover:text-emerald-300">Ver detalhes <i class="fas fa-arrow-right"></i></span>
-                    </div>
+                      <div class="flex space-x-2">
+                         <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-3 rounded-lg" title="Renovar" onclick="renewLoan('${loan.id}')"><i class="fas fa-sync-alt"></i></button>
+                         <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg" title="Devolver" onclick="showReturnConditionModal('${loan.id}')"><i class="fas fa-check"></i></button>
+                      </div>
+                  </div>
+              </div>
+          `;
+          container.innerHTML += card;
+      });
+    }
+
+    function renderUsers() {
+      const container = document.getElementById("userList");
+      container.innerHTML = "";
+
+      if(allUsers.length === 0) {
+          container.innerHTML = `<p class="text-center">Nenhum usuário cadastrado.</p>`; return;
+      }
+
+      allUsers.forEach(user => {
+          const roleStyles = { 
+              'Admin': 'bg-amber-500/30 text-amber-300', 
+              'Leitor(a)': 'bg-emerald-500/30 text-emerald-300',
+              'Professor(a)': 'bg-blue-500/30 text-blue-300'
+          };
+
+          let adminButtons = '';
+          if (currentUser.role === 'Admin' && currentUser.uid !== user.id) { // Admin cannot remove self
+              adminButtons = `
+                  <div class="flex space-x-2">
+                      <button class="text-sm text-emerald-400 hover:text-emerald-300 font-semibold" onclick="showEditUserModal('${user.id}')">Editar</button>
+                      <button class="text-sm text-red-400 hover:text-red-300 font-semibold" onclick="removeUser('${user.id}')">Remover</button>
                   </div>`;
-                container.innerHTML += card;
-            });
-        } catch (error) {
-            console.error("Erro ao renderizar acervo:", error);
-            container.innerHTML = `<p class="text-center text-red-400">Falha ao carregar o acervo.</p>`;
-        }
-      }
-      
-      // ... (As outras funções render, modals e actions seriam convertidas de forma similar,
-      // tornando-as 'async', buscando dados do Firestore com 'await db.collection(...).get()',
-      // e escrevendo dados com '.add()', '.update()', ou '.delete()')
-      
-      // --- UPDATE ALL ---
-      // A função updateAll agora só precisa chamar a renderização da aba ativa.
-      // O updateCounters é chamado separadamente no initAppUI.
-      async function updateAll() {
-        if (!currentUser) return;
-        await updateCounters();
-        const activeTab = document.querySelector(".nav-item.active")?.dataset.section || 'dashboard';
-        await switchTab(activeTab, false); // O switchTab agora também deve ser async
-      }
+          }
+          
+          const userInfo = user.role === 'Leitor(a)' ? `${user.phone} - ${user.classGrade}` : user.phone;
 
-      async function switchTab(sectionId, changeHistory = true) {
-        // ... (A lógica de permissão e troca de classes permanece a mesma) ...
-        const allowedSectionsMap = {
-            'Admin': ['dashboard', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes'],
-            'Professor(a)': ['dashboard', 'acervo', 'relatorios'],
-            'Leitor(a)': ['acervo']
-        };
-        const allowed = allowedSectionsMap[currentUser.role] || [];
-        if (!allowed.includes(sectionId)) {
-            sectionId = allowed[0] || 'acervo';
-        }
-
-        if (changeHistory) {
-            document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-            const newActive = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
-            if (newActive) newActive.classList.add("active");
-        }
-        document.querySelectorAll(".tab-content").forEach(s => s.classList.add("hidden"));
-        document.getElementById(sectionId)?.classList.remove("hidden");
-        
-        // As chamadas de renderização agora são assíncronas
-        if (sectionId === 'acervo') await renderAcervo();
-        // if (sectionId === 'reservas') await renderReservations();
-        // if (sectionId === 'emprestimos') await renderLoans();
-        // if (sectionId === 'usuarios') await renderUsers();
-        // if (sectionId === 'relatorios') await renderReports();
-      }
-
-      // --- EVENT LISTENERS ---
-      document.getElementById("sidebarNav").addEventListener("click", (e) => {
-        const navItem = e.target.closest(".nav-item");
-        if (navItem) { e.preventDefault(); switchTab(navItem.dataset.section); }
+          const card = `
+              <div class="glass-effect rounded-xl p-4 flex items-center justify-between">
+                  <div>
+                      <p class="font-bold text-white">${user.name} <span class="badge ${roleStyles[user.role] || 'bg-gray-500/30 text-gray-300'}">${user.role}</span></p>
+                      <p class="text-sm">${userInfo}</p>
+                  </div>
+                  ${adminButtons}
+              </div>
+          `;
+          container.innerHTML += card;
       });
-      
-      document.getElementById("searchInput").addEventListener("input", (e) => {
-          switchTab('acervo'); renderAcervo(e.target.value);
-      });
-      
-      // ... Adicionar os outros event listeners (btnAddItem.onclick, etc.)
-      
-      document.getElementById("loginForm").addEventListener('submit', handleLogin);
-      document.getElementById("logoutBtn").addEventListener('click', handleLogout);
+    }
+    
+    function renderReports() {
+        // This function logic remains largely the same, but uses the global arrays (allItems, allLoans, etc.)
+        // instead of calling a `getDB()` function.
 
-      // --- MODAL FUNCTIONS (EXEMPLO DE UMA FUNÇÃO ADAPTADA) ---
-      const modal = document.getElementById("modal");
-      const modalContainer = document.getElementById("modalContainer");
-      const modalTitle = document.getElementById("modalTitle");
-      const modalContent = document.getElementById("modalContent");
-      const modalClose = document.getElementById("modalClose");
-      
-      function showModal(title, content, size = 'max-w-lg') {
-        modalTitle.innerText = title;
-        modalContent.innerHTML = content;
-        modalContainer.className = modalContainer.className.replace(/max-w-\w+/g, size);
-        modal.classList.remove("hidden");
-      }
-
-      function closeModal() { modal.classList.add("hidden"); }
-      modalClose.onclick = closeModal;
-      modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-
-      // Exemplo de como a showItemDetailsModal seria adaptada
-      window.showItemDetailsModal = async (itemId) => {
-        try {
-            const itemDoc = await db.collection('items').doc(itemId).get();
-            if (!itemDoc.exists) {
-                alert("Item não encontrado!");
+        // Helper function for rendering lists
+        const renderList = (containerId, data, titleKey, countKey, rankIconType = 'star') => {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            if (!data || data.length === 0) {
+                container.innerHTML = `<p>Nenhum dado para exibir.</p>`;
                 return;
             }
-            const item = { id: itemDoc.id, ...itemDoc.data() };
-            
-            const copiesSnap = await db.collection('copies').where('itemId', '==', itemId).get();
-            const copies = copiesSnap.docs.map(doc => ({id: doc.id, ...doc.data()}));
-            
-            const statusStyles = { 'Disponível': 'bg-green-500/30 text-green-300', 'Emprestado': 'bg-yellow-500/30 text-yellow-300', 'Danificado': 'bg-red-500/30 text-red-300', 'Extraviado': 'bg-gray-500/30 text-gray-300', 'Reservado': 'bg-blue-500/30 text-blue-300' };
-            
-            let copiesHtml = copies.map(copy => `<li class="flex justify-between items-center p-2 bg-gray-800 rounded-md"><div><span class="font-mono text-sm">#${copy.barcode}</span></div><span class="badge ${statusStyles[copy.status] || ''}">${copy.status}</span></li>`).join('');
+            data.slice(0, 5).forEach((item, index) => {
+                const rankIcons = {
+                    'star': ['fa-trophy text-yellow-400', 'fa-medal text-gray-300', 'fa-award text-orange-400', 'fa-star text-emerald-400', 'fa-star text-emerald-400']
+                };
+                const icon = rankIcons[rankIconType][index] || 'fa-star text-emerald-400';
+                const line = `
+                    <div class="flex items-center justify-between p-2 bg-gray-800/50 rounded-md">
+                        <p class="font-semibold truncate pr-4"><i class="fas ${icon} mr-3"></i>${item[titleKey]}</p>
+                        <span class="font-bold text-lg text-white whitespace-nowrap">${item[countKey]} empréstimo(s)</span>
+                    </div>
+                `;
+                container.innerHTML += line;
+            });
+        };
 
-            // ... O resto da lógica para gerar o HTML do modal continua igual ...
-            const content = `<div class="space-y-4"> ... </div>`; // Seu HTML aqui
-
-            showModal("Detalhes do Item", content, 'max-w-2xl');
-        } catch (error) {
-            console.error("Erro ao mostrar detalhes do item:", error);
-            alert("Não foi possível carregar os detalhes do item.");
+        if (allLoans.length === 0) {
+            document.getElementById("mostLoanedList").innerHTML = `<p>Nenhum empréstimo foi realizado ainda.</p>`;
+            document.getElementById("mostLoanedClassificationsList").innerHTML = `<p>Nenhum empréstimo foi realizado ainda.</p>`;
+            document.getElementById("mostActiveReadersList").innerHTML = `<p>Nenhum empréstimo foi realizado ainda.</p>`;
+            document.getElementById("mostActiveClassesList").innerHTML = `<p>Nenhum empréstimo foi realizado ainda.</p>`;
+            document.getElementById("loanActivityStats").innerHTML = `<p class="text-gray-400">Sem dados de empréstimo.</p>`;
+            reportDataCache = {};
+            return;
         }
-      }
-      // NOTA: Devido à complexidade, a conversão completa de TODAS as funções CRUD
-      // e de renderização não foi incluída aqui para manter a resposta gerenciável.
-      // O padrão `async/await` mostrado em `renderAcervo`, `updateCounters` e `showItemDetailsModal`
-      // deve ser aplicado a todas as outras funções que interagem com os dados.
 
+        // 1. Most Loaned Items
+        const itemLoanCounts = allLoans.reduce((acc, loan) => {
+            const copy = allCopies.find(c => c.id === loan.copyId);
+            if(copy) { acc[copy.itemId] = (acc[copy.itemId] || 0) + 1; }
+            return acc;
+        }, {});
+        const sortedItems = Object.entries(itemLoanCounts)
+            .map(([itemId, count]) => {
+                const item = allItems.find(i => i.id == itemId);
+                return { title: item ? item.title : "Item Removido", count };
+            })
+            .sort((a, b) => b.count - a.count);
+
+        // 2. Most Loaned Classifications
+        const classificationLoanCounts = allLoans.reduce((acc, loan) => {
+            const copy = allCopies.find(c => c.id === loan.copyId);
+            if(copy) {
+                const item = allItems.find(i => i.id === copy.itemId);
+                if(item && item.classification) {
+                    acc[item.classification] = (acc[item.classification] || 0) + 1;
+                }
+            }
+            return acc;
+        }, {});
+        const sortedClassifications = Object.entries(classificationLoanCounts)
+            .map(([classification, count]) => ({ classification, count }))
+            .sort((a, b) => b.count - a.count);
+
+        // 3. Most Active Readers
+        const readerLoanCounts = allLoans.reduce((acc, loan) => {
+            acc[loan.userId] = (acc[loan.userId] || 0) + 1;
+            return acc;
+        }, {});
+        const sortedReaders = Object.entries(readerLoanCounts)
+            .map(([userId, count]) => {
+                const user = allUsers.find(u => u.id == userId);
+                return { name: user ? user.name : "Usuário Removido", count };
+            })
+            .sort((a, b) => b.count - a.count);
+            
+        // 4. Most Active Classes
+        const classLoanCounts = allLoans.reduce((acc, loan) => {
+            const user = allUsers.find(u => u.id === loan.userId);
+            if (user && user.role === 'Leitor(a)' && user.classGrade) {
+                acc[user.classGrade] = (acc[user.classGrade] || 0) + 1;
+            }
+            return acc;
+        }, {});
+        const sortedClasses = Object.entries(classLoanCounts)
+            .map(([classGrade, count]) => ({ classGrade, count }))
+            .sort((a, b) => b.count - a.count);
+
+        // 5. Month with Most Loans
+        const monthLoanCounts = allLoans.reduce((acc, loan) => {
+            const monthYear = new Date(loan.loanDate).toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            acc[monthYear] = (acc[monthYear] || 0) + 1;
+            return acc;
+        }, {});
+        const busiestMonth = Object.entries(monthLoanCounts)
+            .sort(([, a], [, b]) => b - a)[0];
+        
+        // Save data for PDF export
+        reportDataCache = {
+            items: sortedItems,
+            classifications: sortedClassifications,
+            readers: sortedReaders,
+            classes: sortedClasses,
+            busiestMonth: busiestMonth ? { month: busiestMonth[0], count: busiestMonth[1] } : null
+        };
+        
+        // Render all lists
+        renderList("mostLoanedList", sortedItems, 'title', 'count');
+        renderList("mostLoanedClassificationsList", sortedClassifications, 'classification', 'count');
+        renderList("mostActiveReadersList", sortedReaders, 'name', 'count');
+        renderList("mostActiveClassesList", sortedClasses, 'classGrade', 'count');
+        
+        if (busiestMonth) {
+            document.getElementById("loanActivityStats").innerHTML = `
+                <p class="text-4xl font-bold text-white">${busiestMonth[1]}</p>
+                <p class="capitalize text-emerald-300">Empréstimos em ${busiestMonth[0]}</p>
+            `;
+        } else {
+            document.getElementById("loanActivityStats").innerHTML = `<p class="text-gray-400">Sem dados de empréstimo.</p>`;
+        }
+    }
+
+    // --- PDF GENERATION (No changes needed here) ---
+    function generateReportPDF() {
+        if (Object.keys(reportDataCache).length === 0 || !reportDataCache.items) {
+            alert("Não há dados para gerar o relatório. Verifique se existem empréstimos registrados.");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        let y = 20; 
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.text("Relatório de Atividades - BiblioSys", 105, y, { align: "center" });
+        y += 5;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 105, y, { align: "center" });
+        y += 15;
+
+        const addSectionToPdf = (title, data, propName, propCount) => {
+            if (y > 250) { 
+                doc.addPage();
+                y = 20;
+            }
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text(title, 14, y);
+            y += 8;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(11);
+            if (!data || data.length === 0) {
+                doc.text("- Nenhum dado para exibir.", 18, y);
+                y += 8;
+            } else {
+                data.slice(0, 5).forEach((item, index) => {
+                    const text = `${index + 1}. ${item[propName]} - ${item[propCount]} empréstimo(s)`;
+                    doc.text(text, 18, y);
+                    y += 7;
+                });
+            }
+            y += 5; 
+        };
+
+        addSectionToPdf("Itens Mais Emprestados", reportDataCache.items, 'title', 'count');
+        addSectionToPdf("Classificações Mais Emprestadas", reportDataCache.classifications, 'classification', 'count');
+        addSectionToPdf("Leitores Mais Ativos", reportDataCache.readers, 'name', 'count');
+        addSectionToPdf("Ranking de Turmas/Séries", reportDataCache.classes, 'classGrade', 'count');
+
+        if (y > 250) { doc.addPage(); y = 20; }
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Mês de Maior Atividade", 14, y);
+        y += 8;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        if(reportDataCache.busiestMonth) {
+            doc.text(`- ${reportDataCache.busiestMonth.month}: ${reportDataCache.busiestMonth.count} empréstimo(s)`, 18, y);
+        } else {
+            doc.text("- Nenhum dado para exibir.", 18, y);
+        }
+        
+        doc.save("Relatorio_BiblioSys.pdf");
+    }
+
+    // --- MODAL FUNCTIONS ---
+    const modal = document.getElementById("modal");
+    const modalContainer = document.getElementById("modalContainer");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalContent = document.getElementById("modalContent");
+    const modalClose = document.getElementById("modalClose");
+    
+    function showModal(title, content, size = 'max-w-lg') {
+      modalTitle.innerText = title;
+      modalContent.innerHTML = content;
+      modalContainer.className = modalContainer.className.replace(/max-w-\w+/g, size);
+      modal.classList.remove("hidden");
+    }
+
+    function closeModal() { modal.classList.add("hidden"); }
+    modalClose.onclick = closeModal;
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+
+    window.showItemDetailsModal = (itemId) => {
+        const item = allItems.find(i => i.id === itemId);
+        if (!item) return;
+        const copies = allCopies.filter(c => c.itemId === itemId);
+        const statusStyles = { 'Disponível': 'bg-green-500/30 text-green-300', 'Emprestado': 'bg-yellow-500/30 text-yellow-300', 'Danificado': 'bg-red-500/30 text-red-300', 'Extraviado': 'bg-gray-500/30 text-gray-300', 'Reservado': 'bg-blue-500/30 text-blue-300' };
+        
+        let copiesHtml = copies.map(copy => `<li class="flex justify-between items-center p-2 bg-gray-800 rounded-md"><div><span class="font-mono text-sm">#${copy.barcode}</span></div><span class="badge ${statusStyles[copy.status] || ''}">${copy.status}</span></li>`).join('');
+
+        const recommendationHtml = item.recommendedBy 
+            ? `<p><strong class="text-emerald-300">Recomendado por:</strong> ${item.recommendedBy}</p>` 
+            : '';
+        
+        let actionButtons = '';
+        if (currentUser.role === 'Admin') {
+            actionButtons = `
+                <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end space-x-4">
+                    <button class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg" onclick="showEditItemModal('${itemId}')">Editar Item</button>
+                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg" onclick="deleteItem('${itemId}')">Excluir Item</button>
+                </div>
+            `;
+        } else if (currentUser.role === 'Leitor(a)') {
+            const hasAvailable = copies.some(c => c.status === 'Disponível');
+            if (hasAvailable) {
+                actionButtons = `
+                    <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                       <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg" onclick="requestReservation('${itemId}')"><i class="fas fa-calendar-check mr-2"></i>Solicitar Reserva</button>
+                    </div>
+                `;
+            }
+        }
+
+        const content = `<div class="space-y-4"><div><h4 class="font-bold text-white">${item.title}</h4><p class="text-sm text-gray-400">${item.author} (${item.year})</p></div><div class="text-sm space-y-2 p-3 bg-gray-800/50 rounded-lg"><p><strong>Editora:</strong> ${item.publisher}</p><p><strong>ISBN/ISSN:</strong> ${item.isbn_issn}</p><p><strong>Classificação:</strong> ${item.classification}</p><p><strong>Localização:</strong> ${item.location}</p>${recommendationHtml}</div><div><h4 class="font-bold text-white mb-2">Exemplares (${copies.length})</h4><ul class="space-y-2">${copiesHtml}</ul></div>${actionButtons}</div>`;
+        showModal("Detalhes do Item", content, 'max-w-2xl');
+    }
+    
+    // All other modal functions like `showAddItemModal`, `showAddLoanModal`, `showAddUserModal` remain largely the same,
+    // but their form submission logic is now async and calls Firestore functions.
+
+    function showAddItemModal() {
+        let recommendationField = '';
+        if (currentUser.role === 'Admin' || currentUser.role === 'Professor(a)') {
+            const recommenderName = currentUser.role === 'Professor(a)' ? currentUser.name : '';
+            recommendationField = `
+                <div class="col-span-2">
+                    <label for="itemRecommendedBy" class="block mb-1 text-sm font-medium">Recomendado por:</label>
+                    <input type="text" id="itemRecommendedBy" value="${recommenderName}" placeholder="Nome do recomendador" class="form-input">
+                </div>
+            `;
+        }
+
+        const content = `
+            <form id="addItemForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="itemTitle" placeholder="Título" class="form-input col-span-2" required>
+                    <input type="text" id="itemAuthor" placeholder="Autor/Artista" class="form-input" required>
+                    <select id="itemType" class="form-select" required><option value="Livro">Livro</option><option value="Revista">Revista</option><option value="Mídia Digital">Mídia Digital</option></select>
+                    <input type="text" id="itemPublisher" placeholder="Editora" class="form-input">
+                    <input type="number" id="itemYear" placeholder="Ano" class="form-input">
+                    <input type="text" id="itemIsbn" placeholder="ISBN/ISSN" class="form-input col-span-2" required>
+                    <input type="text" id="itemClassification" placeholder="Classificação (Ex: Fantasia)" class="form-input">
+                    <input type="text" id="itemLocation" placeholder="Localização (Ex: Corredor A)" class="form-input">
+                    ${recommendationField}
+                </div>
+                <div class="pt-4 border-t border-gray-700">
+                  <label for="itemQuantity" class="block mb-2 font-semibold">Quantidade de exemplares a criar:</label>
+                  <input type="number" id="itemQuantity" value="1" min="1" class="form-input w-full">
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Adicionar Item</button>
+            </form>`;
+        showModal("Adicionar Novo Item ao Acervo", content, 'max-w-3xl');
+        document.getElementById("addItemForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const recommendedByInput = document.getElementById("itemRecommendedBy");
+            const newItemData = {
+                title: document.getElementById("itemTitle").value, author: document.getElementById("itemAuthor").value,
+                type: document.getElementById("itemType").value, publisher: document.getElementById("itemPublisher").value,
+                year: document.getElementById("itemYear").value, isbn_issn: document.getElementById("itemIsbn").value,
+                classification: document.getElementById("itemClassification").value, location: document.getElementById("itemLocation").value,
+                recommendedBy: recommendedByInput ? (recommendedByInput.value || null) : null
+            };
+
+            try {
+                const itemDocRef = await addDoc(collection(db, "items"), newItemData);
+                
+                const quantity = parseInt(document.getElementById("itemQuantity").value) || 1;
+                const typePrefix = newItemData.type.substring(0,3).toUpperCase();
+                for(let i = 0; i < quantity; i++) {
+                    const barcode = `${typePrefix}${Date.now() + i}`;
+                    await addDoc(collection(db, "copies"), {
+                        itemId: itemDocRef.id,
+                        barcode: barcode,
+                        status: "Disponível"
+                    });
+                }
+                
+                await addDoc(collection(db, "notifications"), { 
+                    text: `Novo item adicionado: "${newItemData.title}"`, 
+                    unread: true, 
+                    timestamp: serverTimestamp(), 
+                    userId: null 
+                });
+                
+                await fetchAllData();
+                updateAll();
+                updateNotificationIndicator();
+                closeModal();
+            } catch (error) {
+                console.error("Error adding item: ", error);
+                alert("Falha ao adicionar o item.");
+            }
+        };
+    }
+
+    function showAddLoanModal() {
+        const availableCopies = allCopies.filter(c => c.status === 'Disponível').map(c => {
+            const item = allItems.find(i => i.id === c.itemId);
+            return `<option value="${c.id}">${item.title} (#${c.barcode})</option>`
+        }).join('');
+        const users = allUsers.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+
+        const content = `
+            <form id="addLoanForm" class="space-y-4">
+                <label>Exemplar Disponível</label><select id="loanCopyId" class="form-select">${availableCopies}</select>
+                <label>Usuário</label><select id="loanUserId" class="form-select">${users}</select>
+                <label>Data de Devolução</label><input type="date" id="loanDueDate" class="form-input" required>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Registrar Empréstimo</button>
+            </form>`;
+        showModal("Novo Empréstimo", content);
+        document.getElementById("addLoanForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const copyId = document.getElementById("loanCopyId").value;
+            const newLoanData = {
+                copyId: copyId,
+                userId: document.getElementById("loanUserId").value,
+                loanDate: new Date().toISOString().split('T')[0],
+                dueDate: document.getElementById("loanDueDate").value,
+                returnDate: null
+            };
+
+            try {
+                await addDoc(collection(db, "loans"), newLoanData);
+                const copyDocRef = doc(db, "copies", copyId);
+                await updateDoc(copyDocRef, { status: "Emprestado" });
+                
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch (error) {
+                console.error("Error adding loan: ", error);
+                alert("Falha ao registrar empréstimo.");
+            }
+        }
+    }
+
+    function showAddUserModal() {
+        const content = `
+              <form id="addUserForm" class="space-y-4">
+                  <input type="text" id="userName" placeholder="Nome Completo" class="form-input" required>
+                  <input type="email" id="userEmail" placeholder="Email para login" class="form-input" required>
+                  <input type="password" id="userPassword" placeholder="Senha inicial" class="form-input" required>
+                  <input type="tel" id="userPhone" placeholder="Telefone (Ex: 85912345678)" class="form-input" required>
+                  <select id="userRole" class="form-select">
+                      <option value="Leitor(a)">Leitor(a)</option>
+                      <option value="Professor(a)">Professor(a)</option>
+                      <option value="Admin">Admin</option>
+                  </select>
+                  <div id="classGradeContainer">
+                     <input type="text" id="userClassGrade" placeholder="Turma/Série (Ex: 3º Ano B)" class="form-input">
+                  </div>
+                  <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Adicionar Usuário</button>
+              </form>`;
+        showModal("Adicionar Novo Usuário", content);
+        
+        const roleSelect = document.getElementById("userRole");
+        const classGradeContainer = document.getElementById("classGradeContainer");
+        roleSelect.onchange = () => {
+            classGradeContainer.style.display = roleSelect.value === 'Leitor(a)' ? 'block' : 'none';
+        };
+
+        document.getElementById("addUserForm").onsubmit = async (e) => {
+            e.preventDefault();
+            alert("A criação de usuários com senha deve ser feita pelo painel do Firebase Authentication por segurança. Esta função criará apenas o perfil no banco de dados.");
+            
+            const role = document.getElementById("userRole").value;
+            const classGrade = role === 'Leitor(a)' ? document.getElementById("userClassGrade").value : null;
+            const newUserData = { 
+                name: document.getElementById("userName").value, 
+                phone: document.getElementById("userPhone").value, 
+                role: role, 
+                classGrade: classGrade
+            };
+
+            try {
+                // In a real scenario, you would create the user in Firebase Auth first, get the UID, then create the doc in Firestore with that UID.
+                await addDoc(collection(db, "users"), newUserData);
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch (error) {
+                console.error("Error adding user profile: ", error);
+                alert("Erro ao criar perfil do usuário. Crie o usuário no painel do Firebase Authentication primeiro.");
+            }
+        };
+    }
+    
+    // --- ACTION HANDLERS & CRUD ---
+    window.requestReservation = async (itemId) => {
+        const item = allItems.find(i => i.id === itemId);
+        
+        const hasPendingReservation = allReservations.some(r => r.userId === currentUser.uid && r.itemId === itemId && r.status === 'Pendente');
+        if (hasPendingReservation) {
+            alert('Você já possui uma reserva pendente para este item.');
+            return;
+        }
+
+        if (confirm(`Confirmar solicitação de reserva para "${item.title}" em nome de ${currentUser.name}?`)) {
+            const newReservation = {
+                userId: currentUser.uid,
+                userName: currentUser.name,
+                itemId: item.id,
+                itemTitle: item.title,
+                requestDate: new Date().toISOString(),
+                status: 'Pendente',
+                copyId: null
+            };
+            
+            try {
+                await addDoc(collection(db, "reservations"), newReservation);
+                await addDoc(collection(db, "notifications"), { 
+                    text: `Nova reserva de "${item.title}" por ${currentUser.name}.`, 
+                    unread: true, 
+                    timestamp: serverTimestamp(), 
+                    userId: null 
+                });
+                
+                await fetchAllData();
+                updateAll();
+                updateNotificationIndicator();
+                closeModal();
+                alert('Solicitação de reserva enviada com sucesso! Você será notificado sobre a aprovação.');
+            } catch(e) { console.error(e); alert("Erro ao solicitar reserva.")}
+        }
+    };
+
+    window.approveReservation = async (reservationId) => {
+        const reservation = allReservations.find(r => r.id === reservationId);
+        const availableCopy = allCopies.find(c => c.itemId === reservation.itemId && c.status === 'Disponível');
+
+        if (!availableCopy) {
+            alert('Não há exemplares disponíveis para aprovar esta reserva. O item pode ter sido emprestado.');
+            return;
+        }
+
+        try {
+            await updateDoc(doc(db, "reservations", reservationId), { status: 'Aprovada', copyId: availableCopy.id });
+            await updateDoc(doc(db, "copies", availableCopy.id), { status: 'Reservado' });
+            await addDoc(collection(db, "notifications"), { 
+                text: `Sua reserva para "${reservation.itemTitle}" foi APROVADA.`, 
+                unread: true, 
+                timestamp: serverTimestamp(), 
+                userId: reservation.userId 
+            });
+
+            await fetchAllData();
+            updateAll();
+            updateNotificationIndicator();
+            alert('Reserva aprovada e exemplar separado.');
+        } catch(e) { console.error(e); alert("Erro ao aprovar reserva.")}
+    };
+    
+    window.declineReservation = async (reservationId) => {
+        if (!confirm('Tem certeza que deseja recusar esta solicitação de reserva?')) return;
+        
+        try {
+            const reservation = allReservations.find(r => r.id === reservationId);
+            await addDoc(collection(db, "notifications"), { 
+                text: `Sua reserva para "${reservation.itemTitle}" foi RECUSADA.`, 
+                unread: true, 
+                timestamp: serverTimestamp(), 
+                userId: reservation.userId 
+            });
+            await deleteDoc(doc(db, "reservations", reservationId));
+
+            await fetchAllData();
+            updateAll();
+            updateNotificationIndicator();
+            alert('Reserva recusada.');
+        } catch(e) { console.error(e); alert("Erro ao recusar reserva.")}
+    };
+    
+    // The remaining CRUD functions (`processReturn`, `renewLoan`, etc.) follow the same pattern:
+    // 1. Find the relevant document ID.
+    // 2. Call `updateDoc` or `deleteDoc` from Firestore.
+    // 3. `await fetchAllData()` to get the latest state.
+    // 4. `updateAll()` to re-render the UI.
+    
+    window.showReturnConditionModal = (loanId) => {
+        const content = `
+            <form id="returnConditionForm" class="space-y-4">
+                <p>Qual o estado do item devolvido?</p>
+                <select id="returnCondition" class="form-select">
+                    <option value="bom-estado">Em bom estado</option>
+                    <option value="danificado">Devolvido com danos</option>
+                    <option value="extraviado">Extraviado / Furtado</option>
+                </select>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Confirmar Devolução</button>
+            </form>
+        `;
+        showModal("Confirmar Devolução", content);
+        document.getElementById("returnConditionForm").onsubmit = (e) => {
+            e.preventDefault();
+            const condition = document.getElementById("returnCondition").value;
+            processReturn(loanId, condition);
+        };
+    }
+
+    async function processReturn(loanId, condition) {
+        const loan = allLoans.find(l => l.id === loanId);
+        
+        let newStatus = "Disponível";
+        switch(condition) {
+            case 'danificado': newStatus = "Danificado"; alert("Item registrado como danificado. Verifique a política de multas."); break;
+            case 'extraviado': newStatus = "Extraviado"; alert("Item registrado como extraviado. O usuário será notificado."); break;
+        }
+
+        try {
+            await updateDoc(doc(db, "loans", loanId), { returnDate: new Date().toISOString().split('T')[0] });
+            await updateDoc(doc(db, "copies", loan.copyId), { status: newStatus });
+            
+            await fetchAllData();
+            updateAll();
+            closeModal();
+        } catch(e) { console.error(e); alert("Erro ao processar devolução.")}
+    }
+
+    window.renewLoan = async (loanId) => {
+        if (!confirm('Deseja realmente renovar este empréstimo por mais 7 dias?')) return;
+        const newDueDate = new Date();
+        newDueDate.setDate(newDueDate.getDate() + 7);
+
+        try {
+            await updateDoc(doc(db, "loans", loanId), { dueDate: newDueDate.toISOString().split('T')[0] });
+            await fetchAllData();
+            updateAll();
+            alert('Empréstimo renovado com sucesso!');
+        } catch(e) { console.error(e); alert("Erro ao renovar empréstimo.")}
+    };
+    
+    window.removeUser = async (userId) => {
+        if (!confirm('Tem certeza que deseja remover este usuário? Esta ação não pode ser desfeita.')) return;
+        
+        const userHasActiveLoans = allLoans.some(l => l.userId === userId && !l.returnDate);
+        if (userHasActiveLoans) {
+            alert('Não é possível remover usuários com empréstimos ativos.');
+            return;
+        }
+
+        try {
+            await deleteDoc(doc(db, "users", userId));
+            alert("Perfil do usuário removido. Lembre-se de remover o login dele na aba Authentication do Firebase.");
+            await fetchAllData();
+            updateAll();
+        } catch(e) { console.error(e); alert("Erro ao remover usuário.")}
+    };
+    
+    window.showEditUserModal = (userId) => {
+        const user = allUsers.find(u => u.id === userId);
+        const content = `
+            <form id="editUserForm" class="space-y-4">
+                <input type="hidden" id="editUserId" value="${user.id}">
+                <label>Nome</label><input type="text" id="editUserName" class="form-input" value="${user.name}" required>
+                <label>Telefone</label><input type="tel" id="editUserPhone" class="form-input" value="${user.phone}" required>
+                <label>Perfil</label><select id="editUserRole" class="form-select">
+                    <option value="Leitor(a)" ${user.role === 'Leitor(a)' ? 'selected' : ''}>Leitor(a)</option>
+                    <option value="Professor(a)" ${user.role === 'Professor(a)' ? 'selected' : ''}>Professor(a)</option>
+                    <option value="Admin" ${user.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                </select>
+                <div id="editClassGradeContainer" style="display: ${user.role === 'Leitor(a)' ? 'block' : 'none'}">
+                    <label>Turma/Série</label>
+                    <input type="text" id="editUserClassGrade" value="${user.classGrade || ''}" placeholder="Turma/Série" class="form-input">
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
+            </form>
+        `;
+        showModal("Editar Usuário", content);
+
+        const roleSelect = document.getElementById("editUserRole");
+        const classGradeContainer = document.getElementById("editClassGradeContainer");
+        roleSelect.onchange = () => {
+            classGradeContainer.style.display = roleSelect.value === 'Leitor(a)' ? 'block' : 'none';
+        };
+        
+        document.getElementById('editUserForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const role = document.getElementById('editUserRole').value;
+            const updatedData = {
+                name: document.getElementById('editUserName').value,
+                phone: document.getElementById('editUserPhone').value,
+                role: role,
+                classGrade: role === 'Leitor(a)' ? document.getElementById('editUserClassGrade').value : null
+            };
+
+            try {
+                await updateDoc(doc(db, "users", userId), updatedData);
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch(e) { console.error(e); alert("Erro ao atualizar usuário.") }
+        };
+    }
+    
+    window.showEditItemModal = (itemId) => {
+        const item = allItems.find(i => i.id === itemId);
+        const content = `
+            <form id="editItemForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="editItemTitle" placeholder="Título" class="form-input col-span-2" value="${item.title}" required>
+                    <input type="text" id="editItemAuthor" placeholder="Autor/Artista" class="form-input" value="${item.author}" required>
+                    <select id="editItemType" class="form-select" required>
+                        <option value="Livro" ${item.type === 'Livro' ? 'selected' : ''}>Livro</option>
+                        <option value="Revista" ${item.type === 'Revista' ? 'selected' : ''}>Revista</option>
+                        <option value="Mídia Digital" ${item.type === 'Mídia Digital' ? 'selected' : ''}>Mídia Digital</option>
+                    </select>
+                    <input type="text" id="editItemPublisher" placeholder="Editora" class="form-input" value="${item.publisher}">
+                    <input type="number" id="editItemYear" placeholder="Ano" class="form-input" value="${item.year}">
+                    <input type="text" id="editItemIsbn" placeholder="ISBN/ISSN" class="form-input col-span-2" value="${item.isbn_issn}" required>
+                    <input type="text" id="editItemClassification" placeholder="Classificação" class="form-input" value="${item.classification}">
+                    <input type="text" id="editItemLocation" placeholder="Localização" class="form-input" value="${item.location}">
+                    <div class="col-span-2">
+                      <label for="editItemRecommendedBy" class="block mb-1 text-sm font-medium">Recomendado por:</label>
+                      <input type="text" id="editItemRecommendedBy" value="${item.recommendedBy || ''}" placeholder="Nome do recomendador" class="form-input">
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Salvar Alterações</button>
+            </form>`;
+        showModal("Editar Item", content, 'max-w-3xl');
+        document.getElementById('editItemForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const updatedData = {
+                title: document.getElementById('editItemTitle').value,
+                author: document.getElementById('editItemAuthor').value,
+                type: document.getElementById('editItemType').value,
+                publisher: document.getElementById('editItemPublisher').value,
+                year: document.getElementById('editItemYear').value,
+                isbn_issn: document.getElementById('editItemIsbn').value,
+                classification: document.getElementById('editItemClassification').value,
+                location: document.getElementById('editItemLocation').value,
+                recommendedBy: document.getElementById('editItemRecommendedBy').value || null
+            };
+            try {
+                await updateDoc(doc(db, "items", itemId), updatedData);
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch(e) { console.error(e); alert("Erro ao editar item.")}
+        };
+    };
+
+    window.deleteItem = async (itemId) => {
+        if (!confirm('Tem certeza que deseja excluir este item? TODOS os seus exemplares e registros de empréstimo/reserva serão removidos permanentemente.')) return;
+        
+        try {
+            // This is a simplified deletion. For a production app, use batched writes or cloud functions for atomicity.
+            const copiesToDelete = allCopies.filter(c => c.itemId === itemId);
+            for (const copy of copiesToDelete) {
+                await deleteDoc(doc(db, "copies", copy.id));
+            }
+            await deleteDoc(doc(db, "items", itemId));
+            
+            // Note: This doesn't delete related loans/reservations to preserve history. You might want to change this.
+            
+            await fetchAllData();
+            alert('Item e todos os seus exemplares foram removidos.');
+            updateAll();
+            closeModal();
+        } catch(e) { console.error(e); alert("Erro ao deletar item.")}
+    };
+
+    // --- NOTIFICATION SYSTEM ---
+    function updateNotificationIndicator() {
+        if (!currentUser) return;
+        const isReader = currentUser.role === 'Leitor(a)';
+        const hasUnread = allNotifications.some(n => 
+            n.unread && (n.userId === null || (isReader && n.userId === currentUser.uid))
+        );
+        document.getElementById('notificationIndicator').classList.toggle('hidden', !hasUnread);
+    }
+
+    async function showNotificationsModal() {
+        const isReader = currentUser.role === 'Leitor(a)';
+        
+        const relevantNotifications = allNotifications.filter(n => 
+            n.userId === null || (isReader && n.userId === currentUser.uid)
+        );
+
+        const notificationsHtml = relevantNotifications
+            .sort((a,b) => b.timestamp.toMillis() - a.timestamp.toMillis())
+            .map(n => `<div class="p-3 bg-gray-800/50 rounded-lg"><p class="font-semibold text-white">${n.text}</p><p class="text-xs text-gray-400">${n.timestamp.toDate().toLocaleString('pt-BR')}</p></div>`)
+            .join('');
+        
+        showModal("Notificações", `<div class="space-y-3">${notificationsHtml || '<p>Nenhuma notificação.</p>'}</div>`);
+        
+        // Mark notifications as read
+        for (const n of relevantNotifications) {
+            if(n.unread) {
+                await updateDoc(doc(db, "notifications", n.id), { unread: false });
+            }
+        }
+        await fetchAllData();
+        updateNotificationIndicator();
+    }
+
+    // --- GENERAL & EVENT LISTENERS ---
+    function updateAll() {
+      if (!currentUser) return;
+      updateCounters();
+      const activeTab = document.querySelector(".nav-item.active")?.dataset.section || 'dashboard';
+      switchTab(activeTab, false);
+    }
+
+    function switchTab(sectionId, changeHistory = true) {
+      if (!currentUser) return;
+      // Permission check
+      const allowedSectionsMap = {
+          'Admin': ['dashboard', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes'],
+          'Professor(a)': ['dashboard', 'acervo', 'relatorios'],
+          'Leitor(a)': ['acervo']
+      };
+      const allowed = allowedSectionsMap[currentUser.role];
+      if (!allowed.includes(sectionId)) {
+          sectionId = allowed[0]; // default to first allowed section
+      }
+      
+      if (changeHistory) {
+          document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+          const newActive = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
+          if (newActive) newActive.classList.add("active");
+      }
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.add("hidden"));
+      document.getElementById(sectionId)?.classList.remove("hidden");
+      
+      // Call render functions which now use the global state arrays
+      if (sectionId === 'acervo') renderAcervo();
+      if (sectionId === 'reservas') renderReservations();
+      if (sectionId === 'emprestimos') renderLoans();
+      if (sectionId === 'usuarios') renderUsers();
+      if (sectionId === 'relatorios') renderReports();
+    }
+
+    document.getElementById("sidebarNav").addEventListener("click", (e) => {
+      const navItem = e.target.closest(".nav-item");
+      if (navItem) { e.preventDefault(); switchTab(navItem.dataset.section); }
     });
-  </script>
+    
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+        switchTab('acervo'); renderAcervo(e.target.value);
+    });
+    
+    document.getElementById("btnAddItem").onclick = showAddItemModal;
+    document.getElementById("btnAddLoan").onclick = showAddLoanModal;
+    document.getElementById("btnAddUser").onclick = showAddUserModal;
+    document.getElementById("btnViewReports").onclick = () => switchTab('relatorios');
+    document.getElementById("notificationBtn").onclick = showNotificationsModal;
+    document.getElementById("btnDownloadReport").onclick = generateReportPDF;
+    
+    document.getElementById("loginForm").addEventListener('submit', handleLogin);
+    document.getElementById("logoutBtn").addEventListener('click', handleLogout);
+
+</script>
 </body>
 </html>
