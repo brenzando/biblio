@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BiblioSys - EEMTI Profa. Adalgisa Bonfim Soares</title>
   <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -26,7 +29,7 @@
     }
 
     body {
-      font-family: "Inter", sans-serif;
+      font-family: "Poppins", sans-serif;
       background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
       color: #9ca3af;
       min-height: 100vh;
@@ -179,6 +182,83 @@
     main::-webkit-scrollbar-thumb:hover, .modal-body::-webkit-scrollbar-thumb:hover {
       background-color: rgba(16, 185, 129, 0.6);
     }
+
+    /* --- CALENDAR STYLES --- */
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+    }
+    .calendar-header {
+      text-align: center;
+      font-weight: 600;
+      color: #f9fafb;
+      padding-bottom: 0.5rem;
+    }
+    .calendar-day {
+      position: relative;
+      padding: 0.75rem;
+      text-align: center;
+      min-height: 100px;
+      background: rgba(31, 41, 55, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: background-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .calendar-day.not-current-month {
+      opacity: 0.4;
+    }
+    .calendar-day-number {
+      font-weight: 500;
+      color: #d1d5db;
+    }
+    .calendar-day .reservations {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      text-align: left;
+      width: 100%;
+      max-height: 60px;
+      overflow-y: auto;
+    }
+    .calendar-day .reservation-item {
+      padding: 2px 4px;
+      border-radius: 4px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background-color: rgba(16, 185, 129, 0.2);
+      color: #a7f3d0;
+      cursor: default;
+    }
+    .calendar-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Custom details/summary for expandable cards */
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details > summary::after {
+      content: '\f078'; /* Font Awesome chevron-down */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      float: right;
+      transition: transform 0.2s ease-in-out;
+      margin-left: 1rem;
+    }
+    details[open] > summary::after {
+      transform: rotate(180deg);
+    }
   </style>
 </head>
 <body class="text-gray-300">
@@ -277,12 +357,43 @@
                 <span>Acervo</span>
             </div>
           </a>
+          <a href="#" class="nav-item" data-section="meus-emprestimos">
+              <div class="nav-item-content">
+                  <i class="fas fa-book-reader"></i>
+                  <span>Meus Empréstimos</span>
+              </div>
+          </a>
+          <a href="#" class="nav-item" data-section="atividades">
+            <div class="nav-item-content">
+              <i class="fas fa-tasks"></i>
+              <span>Atividades</span>
+            </div>
+          </a>
+          <a href="#" class="nav-item" data-section="avaliacoes">
+            <div class="nav-item-content">
+              <i class="fas fa-file-alt"></i>
+              <span>Avaliações</span>
+            </div>
+          </a>
           <a href="#" class="nav-item" data-section="reservas">
             <div class="nav-item-content">
                 <i class="fas fa-calendar-check"></i>
-                <span>Reservas</span>
+                <span>Reservas de Livros</span>
             </div>
             <span id="reservasIndicator" class="badge bg-amber-500 text-white"></span>
+          </a>
+          <a href="#" class="nav-item" data-section="agendamentos">
+              <div class="nav-item-content">
+                  <i class="fas fa-desktop"></i>
+                  <span>Agendamentos</span>
+              </div>
+              <span id="agendamentosIndicator" class="badge bg-amber-500 text-white"></span>
+          </a>
+          <a href="#" class="nav-item" data-section="calendario">
+              <div class="nav-item-content">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span>Calendário</span>
+              </div>
           </a>
           <a href="#" class="nav-item" data-section="emprestimos">
             <div class="nav-item-content">
@@ -375,24 +486,55 @@
             </div>
           </div>
           <div id="quickActionsBlock" class="glass-effect rounded-2xl p-6 mt-6">
-            <h2 class="text-xl font-semibold mb-6">Ações Rápidas</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <button class="action-btn" id="btnAddItem" title="Adicionar novo item ao acervo"><i class="fas fa-plus-circle text-2xl text-emerald-400"></i><span>Novo Item</span></button>
-              <button class="action-btn" id="btnAddLoan" title="Registrar novo empréstimo"><i class="fas fa-hand-holding-usd text-2xl text-emerald-400"></i><span>Novo Empréstimo</span></button>
-              <button class="action-btn" id="btnAddUser" title="Adicionar novo usuário"><i class="fas fa-user-plus text-2xl text-amber-400"></i><span>Novo Usuário</span></button>
-              <button class="action-btn" id="btnViewReports" title="Visualizar relatórios"><i class="fas fa-chart-line text-2xl text-orange-400"></i><span>Relatórios</span></button>
-            </div>
+              <h2 class="text-xl font-semibold mb-6">Ações Rápidas</h2>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                  <button class="action-btn" id="btnAddItem" title="Adicionar novo item ao acervo"><i class="fas fa-plus-circle text-2xl text-emerald-400"></i><span>Novo Item</span></button>
+                  <button class="action-btn" id="btnAddLoan" title="Registrar novo empréstimo"><i class="fas fa-hand-holding-usd text-2xl text-emerald-400"></i><span>Empréstimo</span></button>
+                  <button class="action-btn" id="btnNewSchedule" title="Agendar um equipamento"><i class="fas fa-calendar-plus text-2xl text-blue-400"></i><span>Agendar</span></button>
+                  <button class="action-btn" id="btnAddUser" title="Adicionar novo usuário"><i class="fas fa-user-plus text-2xl text-amber-400"></i><span>Novo Usuário</span></button>
+                  <button class="action-btn" id="btnViewReports" title="Visualizar relatórios"><i class="fas fa-chart-line text-2xl text-orange-400"></i><span>Relatórios</span></button>
+              </div>
           </div>
         </section>
 
         <section id="acervo" class="tab-content hidden">
-          <h2 class="text-2xl font-semibold mb-4">Acervo da Biblioteca</h2>
+          <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+            <h2 class="text-2xl font-semibold">Acervo da Biblioteca</h2>
+            <div class="w-full md:w-auto">
+                <select id="classificationFilter" class="form-select">
+                    <option value="">Filtrar por Classificação</option>
+                </select>
+            </div>
+          </div>
           <div id="itemList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
+        <section id="meus-emprestimos" class="tab-content hidden">
+            <!-- Content will be generated by JS -->
+        </section>
+
+        <section id="atividades" class="tab-content hidden">
+            <!-- Content for this section is generated by JavaScript -->
+        </section>
+
+        <section id="avaliacoes" class="tab-content hidden">
+            <!-- Content for this section is generated by JavaScript -->
+        </section>
+
         <section id="reservas" class="tab-content hidden">
-            <h2 class="text-2xl font-semibold mb-4">Gerenciamento de Reservas</h2>
+            <h2 class="text-2xl font-semibold mb-4">Gerenciamento de Reservas de Livros</h2>
             <div id="reservationList" class="space-y-4"></div>
+        </section>
+
+        <section id="agendamentos" class="tab-content hidden">
+            <!-- Content for this section is generated by JavaScript -->
+        </section>
+
+        <section id="calendario" class="tab-content hidden">
+            <h2 class="text-2xl font-semibold mb-4">Calendário de Agendamentos</h2>
+            <div id="calendarContainer" class="glass-effect rounded-2xl p-6">
+                <!-- Calendar will be injected here by JavaScript -->
+            </div>
         </section>
 
         <section id="emprestimos" class="tab-content hidden">
@@ -488,27 +630,28 @@
                   <div class="flex justify-center space-x-6 mb-6">
                       <label class="flex items-center space-x-2 cursor-pointer">
                           <input type="radio" name="userType" value="Leitor(a)" class="form-radio h-4 w-4 text-emerald-500" checked>
-                          <span class="text-white font-medium">Sou Leitor(a)</span>
+                          <span class="text-white font-medium">Sou aluno(a)</span>
                       </label>
                       <label class="flex items-center space-x-2 cursor-pointer">
                           <input type="radio" name="userType" value="Professor(a)" class="form-radio h-4 w-4 text-emerald-500">
-                          <span class="text-white font-medium">Sou Professor(a)</span>
+                          <span class="text-white font-medium">Sou professor(a)</span>
                       </label>
                   </div>
-  
+
                   <input type="text" id="registerName" placeholder="Nome Completo" class="form-input" required>
                   <input type="email" id="registerEmail" placeholder="E-mail" class="form-input" required>
                   <input type="tel" id="registerPhone" placeholder="Número para Contato (Ex: 85912345678)" class="form-input" required>
                   <input type="password" id="registerPassword" placeholder="Crie uma Senha" class="form-input" required>
-  
+
                   <div id="leitorFields">
-                      <input type="text" id="registerClassGrade" placeholder="Sua Turma/Série (Ex: 3º Ano B)" class="form-input">
+                      <label for="registerClassGrade" class="block mb-1 text-sm font-medium">Sua Turma/Série</label>
+                      <select id="registerClassGrade" class="form-select"></select>
                   </div>
-  
+
                   <div id="professorFields" class="hidden">
                       <input type="text" id="registerSubject" placeholder="Disciplina que leciona" class="form-input">
                   </div>
-  
+
                   <p id="registerError" class="text-red-400 text-sm text-center hidden"></p>
                   <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Finalizar Cadastro</button>
               </form>
@@ -524,13 +667,12 @@
     
     // --- FIREBASE CONFIGURATION ---
     const firebaseConfig = {
-        apiKey: "AIzaSyDIMuQmT1C9NN_fXKEhCE9A35HAUXIDdsw",
+        apiKey: "AIzaSyDIMuQmT1C9NN_fXKEhCE9A35HAUXIDdsw", // Replace with your actual config
         authDomain: "bibliosys-adalgisa.firebaseapp.com",
         projectId: "bibliosys-adalgisa",
-        storageBucket: "bibliosys-adalgisa.firebasestorage.app",
+        storageBucket: "bibliosys-adalgisa.appspot.com",
         messagingSenderId: "154477457501",
-        appId: "1:154477457501:web:69925480d8d91aa9db5db4",
-        measurementId: "G-2T95CWKP5C"
+        appId: "1:154477457501:web:69925480d8d91aa9db5db4"
     };
 
     // --- FIREBASE INITIALIZATION ---
@@ -538,68 +680,104 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     
-    // --- GLOBAL STATE MANAGEMENT ---
+    // --- GLOBAL STATE & CONSTANTS ---
     let currentUser = null;
-    let reportDataCache = {}; 
-    let allItems = [], allCopies = [], allUsers = [], allLoans = [], allReservations = [], allNotifications = [];
+    let reportDataCache = {};
+    let currentCalendarDate = new Date();
+    let allItems = [], allCopies = [], allUsers = [], allLoans = [], allReservations = [], allNotifications = [], allEquipmentReservations = [], allActivities = [], allAssessments = [];
+    const classGradesList = [
+        "1A", "1B", "1C", "1D",
+        "2A", "2B", "2C", "2D",
+        "3A", "3B", "3C", "3D"
+    ];
 
-    // --- DATA FETCHING FROM FIRESTORE ---
-    async function fetchAllData() {
-        try {
-            const [itemsSnap, copiesSnap, usersSnap, loansSnap, reservationsSnap, notificationsSnap] = await Promise.all([
-                getDocs(collection(db, "items")),
-                getDocs(collection(db, "copies")),
-                getDocs(collection(db, "users")),
-                getDocs(collection(db, "loans")),
-                getDocs(collection(db, "reservations")),
-                getDocs(collection(db, "notifications"))
-            ]);
+// --- DATA FETCHING FROM FIRESTORE (CORRIGIDO) ---
+async function fetchAllData() {
+    if (!currentUser) {
+        console.log("Nenhum usuário logado para buscar dados.");
+        return;
+    }
 
-            allItems = itemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            allCopies = copiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            allUsers = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            allLoans = loansSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            allReservations = reservationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            allNotifications = notificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            
-            console.log("All data fetched from Firestore.");
-        } catch (error) {
-            console.error("Error fetching data from Firestore: ", error);
-            alert("Erro ao carregar os dados do sistema. Verifique sua conexão e a configuração do Firebase.");
-        }
-    }
+    try {
+        // 1. Consultas que são permitidas para todos os usuários logados
+        const [itemsSnap, copiesSnap, usersSnap, loansSnap, reservationsSnap, notificationsSnap, equipmentReservationsSnap] = await Promise.all([
+            getDocs(collection(db, "items")),
+            getDocs(collection(db, "copies")),
+            getDocs(collection(db, "users")),
+            getDocs(collection(db, "loans")),
+            getDocs(collection(db, "reservations")),
+            getDocs(collection(db, "notifications")),
+            getDocs(collection(db, "equipmentReservations")),
+        ]);
 
-// NOVO CÓDIGO CORRIGIDO
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        // Se um usuário está autenticado, buscamos seu perfil no Firestore.
-        const userDocRef = doc(db, "users", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
+        // Mapeia os resultados das consultas gerais
+        allItems = itemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allCopies = copiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allUsers = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allLoans = loansSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allReservations = reservationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allNotifications = notificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allEquipmentReservations = equipmentReservationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        if (userDocSnap.exists()) {
-            // Se o perfil existe, carregamos a aplicação.
-            currentUser = { uid: user.uid, ...userDocSnap.data() };
-            await initAppUI();
+        // 2. Consultas condicionais para Atividades e Avaliações, baseadas no perfil do usuário
+        let activitiesQuery, assessmentsQuery;
+        const activitiesRef = collection(db, "activities");
+        const assessmentsRef = collection(db, "assessments");
+
+        // Se for Admin ou Professor, busca tudo.
+        if (currentUser.role === 'Admin' || currentUser.role === 'Professor(a)') {
+            activitiesQuery = query(activitiesRef);
+            assessmentsQuery = query(assessmentsRef);
+        } 
+        // Se for Leitor, aplica o filtro por turma.
+        else if (currentUser.role === 'Leitor(a)' && currentUser.classGrade) {
+            activitiesQuery = query(activitiesRef, where("classGrades", "array-contains", currentUser.classGrade));
+            assessmentsQuery = query(assessmentsRef, where("classGrades", "array-contains", currentUser.classGrade));
+        } 
+        // Se não for nenhum dos perfis (ou um Leitor sem turma), define as listas como vazias.
+        else {
+            allActivities = [];
+            allAssessments = [];
+            console.log("All data fetched from Firestore (com dados restritos).");
+            return; // Encerra a função aqui, pois já temos o que precisamos.
+        }
+
+        // Executa as consultas de atividades e avaliações
+        const [activitiesSnap, assessmentsSnap] = await Promise.all([
+            getDocs(activitiesQuery),
+            getDocs(assessmentsQuery)
+        ]);
+
+        allActivities = activitiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allAssessments = assessmentsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        console.log("All data fetched from Firestore (com dados restritos).");
+
+    } catch (error) {
+        console.error("Error fetching data from Firestore: ", error);
+        alert("Erro ao carregar os dados do sistema. Verifique sua conexão e a configuração do Firebase.");
+    }
+}
+
+    // --- AUTHENTICATION & SESSION ---
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userDocRef = doc(db, "users", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                currentUser = { uid: user.uid, ...userDocSnap.data() };
+                await initAppUI();
+            } else {
+                console.error("User profile not found in Firestore!");
+                handleLogout();
+            }
         } else {
-            // Se o perfil não existe, é um estado inválido.
-            // Apenas registramos o erro e mantemos o usuário na tela de login.
-            // NÃO deslogamos mais, evitando o loop.
-            console.error(`ERRO CRÍTICO: Usuário autenticado com UID ${user.uid} não possui perfil no Firestore.`);
-            alert("Erro de perfil de usuário. Contate o administrador.");
-            // Opcional: Deslogar aqui se for a política desejada, mas o ideal é corrigir os dados.
-            // await signOut(auth); 
-            
-            // Garante que a tela de login esteja visível e o app escondido.
+            currentUser = null;
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('appContainer').classList.add('hidden');
         }
-    } else {
-        // Se não há usuário autenticado, mostra a tela de login.
-        currentUser = null;
-        document.getElementById('loginScreen').classList.remove('hidden');
-        document.getElementById('appContainer').classList.add('hidden');
-    }
-});
+    });
 
     async function handleLogin(e) {
         e.preventDefault();
@@ -633,29 +811,42 @@ onAuthStateChanged(auth, async (user) => {
     
     function applyRolePermissions() {
         if (!currentUser) return;
-        document.getElementById('welcomeMessage').textContent = `Bem-vindo(a), ${currentUser.name || 'Usuário'}!`;
+        document.getElementById('welcomeMessage').textContent = `Bem-vindo(a), ${currentUser.name}!`;
         
         const navItems = document.querySelectorAll('.nav-item');
         const quickActionsBlock = document.getElementById('quickActionsBlock');
         const statusBlock = document.getElementById('statusBlock');
+
+        const quickActions = {
+            addItem: document.getElementById('btnAddItem'),
+            addLoan: document.getElementById('btnAddLoan'),
+            newSchedule: document.getElementById('btnNewSchedule'),
+            addUser: document.getElementById('btnAddUser'),
+            viewReports: document.getElementById('btnViewReports')
+        };
         
-        const allSections = ['dashboard', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes'];
+        const allSections = ['dashboard', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes', 'agendamentos', 'calendario', 'meus-emprestimos', 'atividades', 'avaliacoes'];
         let allowedSections = [];
         
-        quickActionsBlock.style.display = 'block';
+        // Hide all quick actions by default
+        Object.values(quickActions).forEach(btn => btn.style.display = 'none');
+        quickActionsBlock.style.display = 'none';
         statusBlock.style.display = 'block';
         
         switch (currentUser.role) {
             case 'Admin':
-                allowedSections = allSections;
+                allowedSections = allSections.filter(s => s !== 'meus-emprestimos');
+                Object.values(quickActions).forEach(btn => btn.style.display = 'flex');
+                quickActionsBlock.style.display = 'block';
                 break;
             case 'Professor(a)':
-                allowedSections = ['dashboard', 'acervo', 'relatorios'];
-                quickActionsBlock.style.display = 'none';
+                allowedSections = ['dashboard', 'acervo', 'relatorios', 'agendamentos', 'calendario', 'atividades', 'avaliacoes'];
+                quickActions.newSchedule.style.display = 'flex';
+                quickActions.viewReports.style.display = 'flex';
+                quickActionsBlock.style.display = 'block';
                 break;
             case 'Leitor(a)':
-                allowedSections = ['acervo'];
-                quickActionsBlock.style.display = 'none';
+                allowedSections = ['acervo', 'meus-emprestimos', 'atividades', 'avaliacoes'];
                 statusBlock.style.display = 'none';
                 break;
         }
@@ -673,8 +864,9 @@ onAuthStateChanged(auth, async (user) => {
     // --- RENDER FUNCTIONS ---
     function updateCounters() {
       const activeLoans = allLoans.filter(l => !l.returnDate);
-      const overdueLoans = activeLoans.filter(l => new Date(l.dueDate) < new Date());
-      const pendingReservations = allReservations.filter(r => r.status === 'Pendente');
+      const overdueLoans = activeLoans.filter(l => !l.returnDate && new Date(l.dueDate) < new Date());
+      const pendingBookReservations = allReservations.filter(r => r.status === 'Pendente');
+      const pendingEquipmentReservations = allEquipmentReservations.filter(r => r.status === 'Pendente');
       
       document.getElementById("totalItems").textContent = allItems.length;
       document.getElementById("totalCopies").textContent = allCopies.length;
@@ -687,23 +879,46 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("dashboardOverdue").textContent = overdueLoans.length;
 
       const reservasIndicator = document.getElementById('reservasIndicator');
-      if (pendingReservations.length > 0) {
-          reservasIndicator.textContent = pendingReservations.length;
+      if (pendingBookReservations.length > 0 && currentUser.role === 'Admin') {
+          reservasIndicator.textContent = pendingBookReservations.length;
           reservasIndicator.style.display = 'inline-block';
       } else {
           reservasIndicator.style.display = 'none';
       }
+
+      const agendamentosIndicator = document.getElementById('agendamentosIndicator');
+      if (pendingEquipmentReservations.length > 0 && currentUser.role === 'Admin') {
+          agendamentosIndicator.textContent = pendingEquipmentReservations.length;
+          agendamentosIndicator.style.display = 'inline-block';
+      } else {
+          agendamentosIndicator.style.display = 'none';
+      }
     }
 
-    function renderAcervo(filter = "") {
+    function populateClassificationFilter() {
+        const classifications = [...new Set(allItems.map(item => item.classification).filter(Boolean))];
+        const filterDropdown = document.getElementById('classificationFilter');
+        filterDropdown.innerHTML = `<option value="">Filtrar por Classificação</option>`; // Reset
+        classifications.sort().forEach(c => {
+            const option = document.createElement('option');
+            option.value = c;
+            option.textContent = c;
+            filterDropdown.appendChild(option);
+        });
+    }
+    
+    function renderAcervo(filter = "", classificationFilter = "") {
         const container = document.getElementById("itemList");
         container.innerHTML = "";
         const lowercasedFilter = filter.toLowerCase();
-        const filteredItems = allItems.filter(item =>
-            item.title.toLowerCase().includes(lowercasedFilter) ||
-            item.author.toLowerCase().includes(lowercasedFilter) ||
-            (item.isbn_issn && item.isbn_issn.toLowerCase().includes(lowercasedFilter))
-        );
+
+        const filteredItems = allItems.filter(item => {
+            const searchMatch = item.title.toLowerCase().includes(lowercasedFilter) ||
+                                item.author.toLowerCase().includes(lowercasedFilter) ||
+                                (item.isbn_issn && item.isbn_issn.toLowerCase().includes(lowercasedFilter));
+            const classificationMatch = classificationFilter ? item.classification === classificationFilter : true;
+            return searchMatch && classificationMatch;
+        });
 
         if (filteredItems.length === 0) {
             container.innerHTML = `<p class="text-center md:col-span-2 lg:col-span-3">Nenhum item encontrado.</p>`; return;
@@ -733,6 +948,221 @@ onAuthStateChanged(auth, async (user) => {
             container.innerHTML += card;
         });
     }
+
+    function renderMeusEmprestimos() {
+        const container = document.getElementById("meus-emprestimos");
+        container.innerHTML = `<h2 class="text-2xl font-semibold mb-4">Meus Empréstimos</h2>`;
+
+        const myLoans = allLoans.filter(loan => loan.userId === currentUser.uid)
+            .sort((a, b) => new Date(b.loanDate) - new Date(a.loanDate));
+
+        if (myLoans.length === 0) {
+            container.innerHTML += `<p class="text-center glass-effect rounded-xl p-6">Você não possui nenhum empréstimo no seu histórico.</p>`;
+            return;
+        }
+
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+
+        const overdueLoans = myLoans.filter(l => !l.returnDate && new Date(l.dueDate) < now);
+        const activeLoans = myLoans.filter(l => !l.returnDate && new Date(l.dueDate) >= now);
+        const returnedLoans = myLoans.filter(l => l.returnDate);
+        
+        const createLoanList = (title, loans, status) => {
+            let html = `<div class="mb-8"><h3 class="text-xl font-semibold mb-4">${title} (${loans.length})</h3><div class="space-y-4">`;
+            if (loans.length === 0) {
+                html += `<p class="text-gray-400 italic">Nenhum empréstimo nesta categoria.</p>`;
+            } else {
+                loans.forEach(loan => {
+                    const copy = allCopies.find(c => c.id === loan.copyId);
+                    const item = copy ? allItems.find(i => i.id === copy.itemId) : null;
+                    if (!item) return;
+
+                    const dueDate = new Date(loan.dueDate + 'T00:00:00-03:00');
+                    let statusInfo = `Devolver em: ${dueDate.toLocaleDateString('pt-BR')}`;
+                    let borderColor = 'border-emerald-500';
+
+                    if (status === 'overdue') {
+                        statusInfo = `DEVOLUÇÃO ATRASADA! (Venceu em: ${dueDate.toLocaleDateString('pt-BR')})`;
+                        borderColor = 'border-red-500';
+                    } else if (status === 'returned') {
+                        const returnDate = loan.returnDate.toDate ? loan.returnDate.toDate() : new Date(loan.returnDate + 'T00:00:00-03:00');
+                        statusInfo = `Devolvido em: ${returnDate.toLocaleDateString('pt-BR')}`;
+                        borderColor = 'border-gray-500';
+                    }
+
+                    html += `
+                        <div class="glass-effect rounded-xl p-4 border-l-4 ${borderColor}">
+                            <p class="font-bold text-white">${item.title}</p>
+                            <p class="text-sm text-gray-400">Emprestado em: ${new Date(loan.loanDate + 'T00:00:00-03:00').toLocaleDateString('pt-BR')}</p>
+                            <p class="text-sm font-semibold mt-1">${statusInfo}</p>
+                        </div>
+                    `;
+                });
+            }
+            html += `</div></div>`;
+            return html;
+        };
+
+        container.innerHTML += createLoanList('Empréstimos Atrasados', overdueLoans, 'overdue');
+        container.innerHTML += createLoanList('Empréstimos Ativos', activeLoans, 'active');
+        container.innerHTML += createLoanList('Histórico de Devoluções', returnedLoans, 'returned');
+    }
+
+    function renderAvaliacoes() {
+        const container = document.getElementById("avaliacoes");
+        const disciplines = [...new Set(allAssessments.map(a => a.discipline).filter(Boolean))].sort();
+        
+        let headerHTML = `
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <h2 class="text-2xl font-semibold">Calendário de Avaliações</h2>
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <select id="assessmentDisciplineFilter" class="form-select flex-grow">
+                        <option value="">Filtrar por Disciplina</option>
+                        ${disciplines.map(d => `<option value="${d}">${d}</option>`).join('')}
+                    </select>
+        `;
+        if (currentUser.role === 'Professor(a)' || currentUser.role === 'Admin') {
+            headerHTML += `<button id="btnAddAssessment" class="btn-primary text-white font-bold py-2 px-4 rounded-lg whitespace-nowrap"><i class="fas fa-plus mr-2"></i>Adicionar</button>`;
+        }
+        headerHTML += `</div></div><div id="assessmentList" class="space-y-4"></div>`;
+        container.innerHTML = headerHTML;
+        
+        document.getElementById('assessmentDisciplineFilter').addEventListener('change', (e) => displayAssessments(e.target.value));
+        if (currentUser.role === 'Professor(a)' || currentUser.role === 'Admin') {
+            document.getElementById('btnAddAssessment').onclick = () => showAddOrEditAssessmentModal();
+        }
+
+        displayAssessments();
+    }
+
+    function displayAssessments(disciplineFilter = "") {
+        const listContainer = document.getElementById('assessmentList');
+        let filteredAssessments = allAssessments;
+
+        if (currentUser.role === 'Leitor(a)') {
+            filteredAssessments = allAssessments.filter(a => a.classGrades && a.classGrades.includes(currentUser.classGrade));
+        }
+
+        filteredAssessments = filteredAssessments
+            .filter(a => disciplineFilter ? a.discipline === disciplineFilter : true)
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        if (filteredAssessments.length === 0) {
+            listContainer.innerHTML = '<p class="text-center glass-effect rounded-xl p-6">Nenhuma avaliação encontrada para sua turma.</p>';
+            return;
+        }
+
+        listContainer.innerHTML = filteredAssessments.map(assessment => {
+            const canEdit = currentUser.role === 'Admin' || (currentUser.role === 'Professor(a)' && assessment.professorUid === currentUser.uid);
+            const editButtons = canEdit ? `
+                <div class="flex-shrink-0 ml-4 space-x-2">
+                    <button onclick="showAddOrEditAssessmentModal('${assessment.id}')" class="text-emerald-400 hover:text-emerald-300" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteAssessment('${assessment.id}')" class="text-red-400 hover:text-red-300" title="Remover"><i class="fas fa-trash"></i></button>
+                </div>
+            ` : '';
+
+            return `
+            <details class="glass-effect rounded-xl overflow-hidden">
+                <summary class="p-4 cursor-pointer font-semibold text-white flex justify-between items-center hover:bg-white/5 transition-colors">
+                    <span class="truncate pr-2">${assessment.type} - ${assessment.discipline}</span>
+                    <div class="flex items-center">
+                        <span class="font-normal text-gray-300 whitespace-nowrap">${new Date(assessment.date + 'T00:00:00-03:00').toLocaleDateString('pt-BR')}</span>
+                        ${editButtons}
+                    </div>
+                </summary>
+                <div class="p-4 border-t border-gray-700 bg-gray-900/30 text-sm space-y-2">
+                    <p><strong>Horário:</strong> ${assessment.time}</p>
+                    <p><strong>Turmas:</strong> ${assessment.classGrades.join(', ')}</p>
+                    <p><strong>Professor(a):</strong> ${assessment.professorName}</p>
+                </div>
+            </details>
+        `}).join('');
+    }
+    
+    function renderAtividades() {
+        const container = document.getElementById("atividades");
+        const disciplines = [...new Set(allActivities.map(a => a.discipline).filter(Boolean))].sort();
+
+        let headerHTML = `
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <h2 class="text-2xl font-semibold">Atividades</h2>
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <select id="activityDisciplineFilter" class="form-select flex-grow">
+                        <option value="">Filtrar por Disciplina</option>
+                        ${disciplines.map(d => `<option value="${d}">${d}</option>`).join('')}
+                    </select>
+        `;
+        if (currentUser.role === 'Professor(a)' || currentUser.role === 'Admin') {
+            headerHTML += `<button id="btnAddActivity" class="btn-primary text-white font-bold py-2 px-4 rounded-lg whitespace-nowrap"><i class="fas fa-plus mr-2"></i>Adicionar</button>`;
+        }
+        headerHTML += `</div></div><div id="activityList" class="space-y-4"></div>`;
+        container.innerHTML = headerHTML;
+
+        document.getElementById('activityDisciplineFilter').addEventListener('change', (e) => displayActivities(e.target.value));
+        if (currentUser.role === 'Professor(a)' || currentUser.role === 'Admin') {
+            document.getElementById('btnAddActivity').onclick = () => showAddOrEditActivityModal();
+        }
+
+        displayActivities();
+    }
+
+    function displayActivities(disciplineFilter = "") {
+        const listContainer = document.getElementById('activityList');
+        let filteredActivities = allActivities;
+
+        if (currentUser.role === 'Leitor(a)') {
+            filteredActivities = allActivities.filter(a => a.classGrades && a.classGrades.includes(currentUser.classGrade));
+        }
+        
+        filteredActivities = filteredActivities
+            .filter(a => disciplineFilter ? a.discipline === disciplineFilter : true)
+            .sort((a, b) => new Date(b.deliveryDate) - new Date(a.deliveryDate));
+        
+        if (filteredActivities.length === 0) {
+            listContainer.innerHTML = '<p class="text-center glass-effect rounded-xl p-6">Nenhuma atividade encontrada para sua turma.</p>';
+            return;
+        }
+
+        listContainer.innerHTML = filteredActivities.map(activity => {
+            let details = '';
+            if (activity.type === 'Livro') {
+                details = `<p><strong>Página(s):</strong> ${activity.pages || 'N/A'}</p><p><strong>Questão(ões):</strong> ${activity.questions || 'N/A'}</p>`;
+            } else if (activity.type === 'PDF' && activity.link) {
+                details = `<a href="${activity.link.startsWith('http') ? activity.link : 'https://' + activity.link}" target="_blank" class="inline-block mt-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg">Acessar PDF <i class="fas fa-external-link-alt ml-2"></i></a>`;
+            } else {
+                 details = `<p>${activity.description || 'Consulte o professor para mais detalhes.'}</p>`;
+            }
+            const deliveryDateTime = new Date(`${activity.deliveryDate}T${activity.deliveryTime || '00:00:00'}`);
+
+            const canEdit = currentUser.role === 'Admin' || (currentUser.role === 'Professor(a)' && activity.professorUid === currentUser.uid);
+            const editButtons = canEdit ? `
+                <div class="flex-shrink-0 ml-4 space-x-2">
+                    <button onclick="showAddOrEditActivityModal('${activity.id}')" class="text-emerald-400 hover:text-emerald-300" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteActivity('${activity.id}')" class="text-red-400 hover:text-red-300" title="Remover"><i class="fas fa-trash"></i></button>
+                </div>
+            ` : '';
+
+            return `
+                <div class="glass-effect rounded-xl p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-bold text-white text-lg">${activity.discipline} - Atividade (${activity.type})</p>
+                            <p class="text-sm">Prazo de Entrega: <span class="font-semibold">${deliveryDateTime.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short'})}</span></p>
+                            <p class="text-xs text-gray-400">Turmas: ${activity.classGrades.join(', ')}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="badge bg-blue-500/30 text-blue-300">${activity.type}</span>
+                            ${editButtons}
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-gray-700 text-sm">
+                        ${details}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
     
     function renderReservations() {
         const container = document.getElementById("reservationList");
@@ -740,7 +1170,7 @@ onAuthStateChanged(auth, async (user) => {
         const pendingReservations = allReservations.filter(r => r.status === 'Pendente');
 
         if (pendingReservations.length === 0) {
-            container.innerHTML = `<p class="text-center">Nenhuma reserva pendente.</p>`;
+            container.innerHTML = `<p class="text-center">Nenhuma reserva de livro pendente.</p>`;
             return;
         }
 
@@ -781,7 +1211,7 @@ onAuthStateChanged(auth, async (user) => {
           const user = allUsers.find(u => u.id === loan.userId);
           if (!user) return;
 
-          const dueDate = new Date(loan.dueDate);
+          const dueDate = new Date(loan.dueDate + 'T00:00:00-03:00');
           const isOverdue = new Date() > dueDate;
 
           const card = `
@@ -821,13 +1251,13 @@ onAuthStateChanged(auth, async (user) => {
           };
 
           let adminButtons = '';
-          if (currentUser.role === 'Admin' && currentUser.uid !== user.id) {
+          if (currentUser.role === 'Admin' && currentUser.uid !== user.id) { 
               adminButtons = `
-                  <div class="flex items-center space-x-3">
-                      <button class="text-sm text-emerald-400 hover:text-emerald-300 font-semibold" onclick="showEditUserModal('${user.id}')">Editar</button>
-                      <button class="text-sm text-red-400 hover:text-red-300 font-semibold" onclick="removeUser('${user.id}')">Remover</button>
-                      <button class="text-sm text-amber-400 hover:text-amber-300 font-semibold" onclick="resetUserPassword('${user.email}')">Redefinir Senha</button>
-                  </div>`;
+                <div class="flex items-center space-x-3">
+                    <button class="text-sm text-emerald-400 hover:text-emerald-300 font-semibold" onclick="showEditUserModal('${user.id}')">Editar</button>
+                    <button class="text-sm text-red-400 hover:text-red-300 font-semibold" onclick="removeUser('${user.id}')">Remover</button>
+                    <button class="text-sm text-amber-400 hover:text-amber-300 font-semibold" onclick="resetUserPassword('${user.email}')">Redefinir Senha</button>
+                </div>`;
           }
           
           const userInfo = user.role === 'Leitor(a)' && user.classGrade ? `${user.phone} - ${user.classGrade}` : user.phone;
@@ -846,6 +1276,7 @@ onAuthStateChanged(auth, async (user) => {
     }
     
     function renderReports() {
+        // Helper function for rendering lists
         const renderList = (containerId, data, titleKey, countKey, rankIconType = 'star') => {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
@@ -854,13 +1285,16 @@ onAuthStateChanged(auth, async (user) => {
                 return;
             }
             data.slice(0, 5).forEach((item, index) => {
-                const rankIcons = {'star': ['fa-trophy text-yellow-400', 'fa-medal text-gray-300', 'fa-award text-orange-400', 'fa-star text-emerald-400', 'fa-star text-emerald-400']};
+                const rankIcons = {
+                    'star': ['fa-trophy text-yellow-400', 'fa-medal text-gray-300', 'fa-award text-orange-400', 'fa-star text-emerald-400', 'fa-star text-emerald-400']
+                };
                 const icon = rankIcons[rankIconType][index] || 'fa-star text-emerald-400';
                 const line = `
                     <div class="flex items-center justify-between p-2 bg-gray-800/50 rounded-md">
                         <p class="font-semibold truncate pr-4"><i class="fas ${icon} mr-3"></i>${item[titleKey]}</p>
                         <span class="font-bold text-lg text-white whitespace-nowrap">${item[countKey]} empréstimo(s)</span>
-                    </div>`;
+                    </div>
+                `;
                 container.innerHTML += line;
             });
         };
@@ -875,65 +1309,266 @@ onAuthStateChanged(auth, async (user) => {
             return;
         }
 
+        // 1. Most Loaned Items
         const itemLoanCounts = allLoans.reduce((acc, loan) => {
             const copy = allCopies.find(c => c.id === loan.copyId);
             if(copy) { acc[copy.itemId] = (acc[copy.itemId] || 0) + 1; }
             return acc;
         }, {});
-        const sortedItems = Object.entries(itemLoanCounts).map(([itemId, count]) => ({ title: allItems.find(i => i.id == itemId)?.title || "Item Removido", count })).sort((a, b) => b.count - a.count);
+        const sortedItems = Object.entries(itemLoanCounts)
+            .map(([itemId, count]) => {
+                const item = allItems.find(i => i.id == itemId);
+                return { title: item ? item.title : "Item Removido", count };
+            })
+            .sort((a, b) => b.count - a.count);
 
+        // 2. Most Loaned Classifications
         const classificationLoanCounts = allLoans.reduce((acc, loan) => {
             const copy = allCopies.find(c => c.id === loan.copyId);
             if(copy) {
                 const item = allItems.find(i => i.id === copy.itemId);
-                if(item?.classification) { acc[item.classification] = (acc[item.classification] || 0) + 1; }
+                if(item && item.classification) {
+                    acc[item.classification] = (acc[item.classification] || 0) + 1;
+                }
             }
             return acc;
         }, {});
-        const sortedClassifications = Object.entries(classificationLoanCounts).map(([classification, count]) => ({ classification, count })).sort((a, b) => b.count - a.count);
+        const sortedClassifications = Object.entries(classificationLoanCounts)
+            .map(([classification, count]) => ({ classification, count }))
+            .sort((a, b) => b.count - a.count);
 
+        // 3. Most Active Readers
         const readerLoanCounts = allLoans.reduce((acc, loan) => {
             acc[loan.userId] = (acc[loan.userId] || 0) + 1;
             return acc;
         }, {});
-        const sortedReaders = Object.entries(readerLoanCounts).map(([userId, count]) => ({ name: allUsers.find(u => u.id == userId)?.name || "Usuário Removido", count })).sort((a, b) => b.count - a.count);
+        const sortedReaders = Object.entries(readerLoanCounts)
+            .map(([userId, count]) => {
+                const user = allUsers.find(u => u.id == userId);
+                return { name: user ? user.name : "Usuário Removido", count };
+            })
+            .sort((a, b) => b.count - a.count);
             
+        // 4. Most Active Classes
         const classLoanCounts = allLoans.reduce((acc, loan) => {
             const user = allUsers.find(u => u.id === loan.userId);
-            if (user?.role === 'Leitor(a)' && user.classGrade) { acc[user.classGrade] = (acc[user.classGrade] || 0) + 1; }
+            if (user && user.role === 'Leitor(a)' && user.classGrade) {
+                acc[user.classGrade] = (acc[user.classGrade] || 0) + 1;
+            }
             return acc;
         }, {});
-        const sortedClasses = Object.entries(classLoanCounts).map(([classGrade, count]) => ({ classGrade, count })).sort((a, b) => b.count - a.count);
+        const sortedClasses = Object.entries(classLoanCounts)
+            .map(([classGrade, count]) => ({ classGrade, count }))
+            .sort((a, b) => b.count - a.count);
 
+        // 5. Month with Most Loans
         const monthLoanCounts = allLoans.reduce((acc, loan) => {
-            const monthYear = new Date(loan.loanDate).toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            const loanDate = loan.loanDate.toDate ? loan.loanDate.toDate() : new Date(loan.loanDate);
+            const monthYear = loanDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
             acc[monthYear] = (acc[monthYear] || 0) + 1;
             return acc;
         }, {});
-        const busiestMonth = Object.entries(monthLoanCounts).sort(([, a], [, b]) => b - a)[0];
+        const busiestMonth = Object.entries(monthLoanCounts)
+            .sort(([, a], [, b]) => b - a)[0];
         
-        reportDataCache = { items: sortedItems, classifications: sortedClassifications, readers: sortedReaders, classes: sortedClasses, busiestMonth: busiestMonth ? { month: busiestMonth[0], count: busiestMonth[1] } : null };
+        // Save data for PDF export
+        reportDataCache = {
+            items: sortedItems,
+            classifications: sortedClassifications,
+            readers: sortedReaders,
+            classes: sortedClasses,
+            busiestMonth: busiestMonth ? { month: busiestMonth[0], count: busiestMonth[1] } : null
+        };
         
+        // Render all lists
         renderList("mostLoanedList", sortedItems, 'title', 'count');
         renderList("mostLoanedClassificationsList", sortedClassifications, 'classification', 'count');
         renderList("mostActiveReadersList", sortedReaders, 'name', 'count');
         renderList("mostActiveClassesList", sortedClasses, 'classGrade', 'count');
         
         if (busiestMonth) {
-            document.getElementById("loanActivityStats").innerHTML = `<p class="text-4xl font-bold text-white">${busiestMonth[1]}</p><p class="capitalize text-emerald-300">Empréstimos em ${busiestMonth[0]}</p>`;
+            document.getElementById("loanActivityStats").innerHTML = `
+                <p class="text-4xl font-bold text-white">${busiestMonth[1]}</p>
+                <p class="capitalize text-emerald-300">Empréstimos em ${busiestMonth[0]}</p>
+            `;
         } else {
             document.getElementById("loanActivityStats").innerHTML = `<p class="text-gray-400">Sem dados de empréstimo.</p>`;
         }
     }
 
+    function renderAgendamentos() {
+        const container = document.getElementById("agendamentos");
+        container.innerHTML = ""; // Clear previous content
+
+        if (currentUser.role === 'Professor(a)') {
+            const professorViewHTML = `
+                <div class="glass-effect rounded-2xl p-6 mb-6">
+                    <h2 class="text-2xl font-semibold mb-4">Solicitar Novo Agendamento</h2>
+                    <form id="equipmentReservationForm" class="space-y-4">
+                        <div>
+                            <label for="equipmentType" class="block mb-1 text-sm font-medium">Equipamento</label>
+                            <select id="equipmentType" class="form-select" required>
+                                <option value="" disabled selected>Selecione um item...</option>
+                                <option value="Notebook">Notebook</option>
+                                <option value="Datashow">Datashow (Projetor)</option>
+                                <option value="Laboratório de Informática">Laboratório de Informática</option>
+                                <option value="Caixa de Som">Caixa de Som</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="reservationDate" class="block mb-1 text-sm font-medium">Data de Utilização</label>
+                            <input type="date" id="reservationDate" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="reservationReason" class="block mb-1 text-sm font-medium">Motivo / Finalidade</label>
+                            <textarea id="reservationReason" rows="3" class="form-input" placeholder="Ex: Aula para o 3º Ano B sobre Biologia Celular" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Enviar Solicitação</button>
+                    </form>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Meus Agendamentos e Solicitações</h3>
+                    <div id="myEquipmentReservationsList" class="space-y-4"></div>
+                </div>
+            `;
+            container.innerHTML = professorViewHTML;
+
+            const myListContainer = document.getElementById("myEquipmentReservationsList");
+            const myReservations = allEquipmentReservations.filter(r => r.userId === currentUser.uid)
+                .sort((a, b) => new Date(b.reservationDate) - new Date(a.reservationDate));
+
+            if (myReservations.length === 0) {
+                myListContainer.innerHTML = '<p class="text-center">Você ainda não fez nenhum agendamento.</p>';
+            } else {
+                myReservations.forEach(res => {
+                    const statusStyles = {
+                        'Pendente': 'border-amber-500',
+                        'Aprovada': 'border-green-500',
+                        'Recusada': 'border-red-500'
+                    };
+                    const card = `
+                        <div class="glass-effect rounded-xl p-4 border-l-4 ${statusStyles[res.status]}">
+                            <p class="font-bold text-white">${res.equipmentType}</p>
+                            <p class="text-sm">Data: <span class="font-semibold">${new Date(res.reservationDate + 'T00:00:00-03:00').toLocaleDateString('pt-BR')}</span></p>
+                            <p class="text-sm">Status: <span class="font-semibold">${res.status}</span></p>
+                        </div>
+                    `;
+                    myListContainer.innerHTML += card;
+                });
+            }
+            document.getElementById("equipmentReservationForm").onsubmit = handleEquipmentReservationRequest;
+
+        } else if (currentUser.role === 'Admin') {
+            const adminViewHTML = `
+                <h2 class="text-2xl font-semibold mb-4">Gerenciar Agendamentos de Equipamentos</h2>
+                <div id="pendingEquipmentReservationsList" class="space-y-4"></div>
+            `;
+            container.innerHTML = adminViewHTML;
+
+            const listContainer = document.getElementById("pendingEquipmentReservationsList");
+            const pendingReservations = allEquipmentReservations.filter(r => r.status === 'Pendente');
+
+            if (pendingReservations.length === 0) {
+                listContainer.innerHTML = '<p class="text-center">Nenhum agendamento pendente.</p>';
+                return;
+            }
+
+            pendingReservations.forEach(res => {
+                const card = `
+                    <div class="glass-effect rounded-xl p-4 border-l-4 border-amber-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-white">${res.equipmentType}</p>
+                                <p class="text-sm">Solicitado por: <span class="font-semibold">${res.userName}</span></p>
+                                <p class="text-sm">Data solicitada: <span class="font-semibold">${new Date(res.reservationDate + 'T00:00:00-03:00').toLocaleDateString('pt-BR')}</span></p>
+                                <p class="text-xs text-gray-400 mt-2"><b>Motivo:</b> ${res.reason}</p>
+                            </div>
+                            <div class="flex space-x-2 flex-shrink-0 ml-4">
+                                <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg" title="Recusar" onclick="declineEquipmentReservation('${res.id}')"><i class="fas fa-times"></i></button>
+                                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg" title="Aprovar" onclick="approveEquipmentReservation('${res.id}')"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                listContainer.innerHTML += card;
+            });
+        }
+    }
+
+    function renderCalendario() {
+        const container = document.getElementById("calendarContainer");
+        container.innerHTML = generateCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+
+        document.getElementById('prevMonthBtn').onclick = () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendario();
+        };
+        document.getElementById('nextMonthBtn').onclick = () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendario();
+        };
+    }
+
+    function generateCalendar(year, month) {
+        const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        const daysOfWeek = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const numDays = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        const approvedReservations = allEquipmentReservations.filter(r => r.status === 'Aprovada');
+
+        let html = `
+            <div class="calendar-nav">
+                <button id="prevMonthBtn" class="btn-primary text-white font-bold p-2 rounded-lg leading-none"><i class="fas fa-chevron-left"></i></button>
+                <h3 class="text-xl font-semibold">${monthNames[month]} ${year}</h3>
+                <button id="nextMonthBtn" class="btn-primary text-white font-bold p-2 rounded-lg leading-none"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="calendar">
+        `;
+
+        daysOfWeek.forEach(day => { html += `<div class="calendar-header">${day}</div>`; });
+
+        for (let i = 0; i < startDayOfWeek; i++) { html += `<div></div>`; }
+
+        for (let day = 1; day <= numDays; day++) {
+            const currentDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const reservationsForDay = approvedReservations.filter(r => r.reservationDate === currentDateStr);
+
+            let reservationsHtml = '';
+            if (reservationsForDay.length > 0) {
+                reservationsHtml = '<div class="reservations">';
+                reservationsForDay.forEach(res => {
+                    const professorFirstName = res.userName.split(' ')[0];
+                    reservationsHtml += `<div class="reservation-item" title="Equipamento: ${res.equipmentType}\nProfessor(a): ${res.userName}">${res.equipmentType} (${professorFirstName})</div>`;
+                });
+                reservationsHtml += '</div>';
+            }
+
+            html += `
+                <div class="calendar-day">
+                    <div class="calendar-day-number">${day}</div>
+                    ${reservationsHtml}
+                </div>
+            `;
+        }
+        html += `</div>`;
+        return html;
+    }
+
     // --- PDF GENERATION ---
     function generateReportPDF() {
         if (Object.keys(reportDataCache).length === 0 || !reportDataCache.items) {
-            alert("Não há dados para gerar o relatório."); return;
+            alert("Não há dados para gerar o relatório. Verifique se existem empréstimos registrados.");
+            return;
         }
+
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         let y = 20; 
+
         doc.setFont("helvetica", "bold");
         doc.setFontSize(18);
         doc.text("Relatório de Atividades - BiblioSys", 105, y, { align: "center" });
@@ -942,8 +1577,12 @@ onAuthStateChanged(auth, async (user) => {
         doc.setFont("helvetica", "normal");
         doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 105, y, { align: "center" });
         y += 15;
+
         const addSectionToPdf = (title, data, propName, propCount) => {
-            if (y > 250) { doc.addPage(); y = 20; }
+            if (y > 250) { 
+                doc.addPage();
+                y = 20;
+            }
             doc.setFont("helvetica", "bold");
             doc.setFontSize(14);
             doc.text(title, 14, y);
@@ -951,18 +1590,23 @@ onAuthStateChanged(auth, async (user) => {
             doc.setFont("helvetica", "normal");
             doc.setFontSize(11);
             if (!data || data.length === 0) {
-                doc.text("- Nenhum dado.", 18, y); y += 8;
+                doc.text("- Nenhum dado para exibir.", 18, y);
+                y += 8;
             } else {
                 data.slice(0, 5).forEach((item, index) => {
-                    doc.text(`${index + 1}. ${item[propName]} - ${item[propCount]} empréstimo(s)`, 18, y); y += 7;
+                    const text = `${index + 1}. ${item[propName]} - ${item[propCount]} empréstimo(s)`;
+                    doc.text(text, 18, y);
+                    y += 7;
                 });
             }
             y += 5; 
         };
+
         addSectionToPdf("Itens Mais Emprestados", reportDataCache.items, 'title', 'count');
         addSectionToPdf("Classificações Mais Emprestadas", reportDataCache.classifications, 'classification', 'count');
         addSectionToPdf("Leitores Mais Ativos", reportDataCache.readers, 'name', 'count');
         addSectionToPdf("Ranking de Turmas/Séries", reportDataCache.classes, 'classGrade', 'count');
+
         if (y > 250) { doc.addPage(); y = 20; }
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
@@ -973,8 +1617,9 @@ onAuthStateChanged(auth, async (user) => {
         if(reportDataCache.busiestMonth) {
             doc.text(`- ${reportDataCache.busiestMonth.month}: ${reportDataCache.busiestMonth.count} empréstimo(s)`, 18, y);
         } else {
-            doc.text("- Nenhum dado.", 18, y);
+            doc.text("- Nenhum dado para exibir.", 18, y);
         }
+        
         doc.save("Relatorio_BiblioSys.pdf");
     }
 
@@ -984,97 +1629,864 @@ onAuthStateChanged(auth, async (user) => {
     const modalTitle = document.getElementById("modalTitle");
     const modalContent = document.getElementById("modalContent");
     const modalClose = document.getElementById("modalClose");
+    
     function showModal(title, content, size = 'max-w-lg') {
       modalTitle.innerText = title;
       modalContent.innerHTML = content;
-      modalContainer.className = modalContainer.className.replace(/max-w-\w+/g, size);
+      modalContainer.className = modalContainer.className.replace(/max-w-\w+/g, ` ${size} `);
       modal.classList.remove("hidden");
     }
+
     function closeModal() { modal.classList.add("hidden"); }
     modalClose.onclick = closeModal;
     modal.onclick = (e) => { if (e.target === modal) closeModal(); };
 
-    // --- ACTION HANDLERS & CRUD ---
-    // (As funções de CRUD como showItemDetailsModal, showAddItemModal, etc., continuam aqui)
-    // As funções que foram modificadas ou adicionadas estão incluídas abaixo para clareza.
-    
     window.showItemDetailsModal = (itemId) => {
         const item = allItems.find(i => i.id === itemId);
         if (!item) return;
         const copies = allCopies.filter(c => c.itemId === itemId);
         const statusStyles = { 'Disponível': 'bg-green-500/30 text-green-300', 'Emprestado': 'bg-yellow-500/30 text-yellow-300', 'Danificado': 'bg-red-500/30 text-red-300', 'Extraviado': 'bg-gray-500/30 text-gray-300', 'Reservado': 'bg-blue-500/30 text-blue-300' };
+        
         let copiesHtml = copies.map(copy => `<li class="flex justify-between items-center p-2 bg-gray-800 rounded-md"><div><span class="font-mono text-sm">#${copy.barcode}</span></div><span class="badge ${statusStyles[copy.status] || ''}">${copy.status}</span></li>`).join('');
-        const recommendationHtml = item.recommendedBy ? `<p><strong class="text-emerald-300">Recomendado por:</strong> ${item.recommendedBy}</p>` : '';
+
+        const recommendationHtml = item.recommendedBy 
+            ? `<p><strong class="text-emerald-300">Recomendado por:</strong> ${item.recommendedBy}</p>` 
+            : '';
+        
         let actionButtons = '';
         if (currentUser.role === 'Admin') {
-            actionButtons = `<div class="mt-6 pt-4 border-t border-gray-700 flex justify-end space-x-4"><button class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg" onclick="showEditItemModal('${itemId}')">Editar Item</button><button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg" onclick="deleteItem('${itemId}')">Excluir Item</button></div>`;
+            actionButtons = `
+                <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end space-x-4">
+                    <button class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg" onclick="showEditItemModal('${itemId}')">Editar Item</button>
+                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg" onclick="deleteItem('${itemId}')">Excluir Item</button>
+                </div>
+            `;
         } else if (currentUser.role === 'Leitor(a)') {
             const hasAvailable = copies.some(c => c.status === 'Disponível');
             if (hasAvailable) {
-                actionButtons = `<div class="mt-6 pt-4 border-t border-gray-700 flex justify-end"><button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg" onclick="requestReservation('${itemId}')"><i class="fas fa-calendar-check mr-2"></i>Solicitar Reserva</button></div>`;
+                actionButtons = `
+                    <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                       <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg" onclick="requestReservation('${itemId}')"><i class="fas fa-calendar-check mr-2"></i>Solicitar Reserva</button>
+                    </div>
+                `;
             }
         }
+
         const content = `<div class="space-y-4"><div><h4 class="font-bold text-white">${item.title}</h4><p class="text-sm text-gray-400">${item.author} (${item.year})</p></div><div class="text-sm space-y-2 p-3 bg-gray-800/50 rounded-lg"><p><strong>Editora:</strong> ${item.publisher}</p><p><strong>ISBN/ISSN:</strong> ${item.isbn_issn}</p><p><strong>Classificação:</strong> ${item.classification}</p><p><strong>Localização:</strong> ${item.location}</p>${recommendationHtml}</div><div><h4 class="font-bold text-white mb-2">Exemplares (${copies.length})</h4><ul class="space-y-2">${copiesHtml}</ul></div>${actionButtons}</div>`;
         showModal("Detalhes do Item", content, 'max-w-2xl');
     }
+    
+    function showAddItemModal() {
+        let recommendationField = '';
+        if (currentUser.role === 'Admin' || currentUser.role === 'Professor(a)') {
+            const recommenderName = currentUser.role === 'Professor(a)' ? currentUser.name : '';
+            recommendationField = `
+                <div class="col-span-2">
+                    <label for="itemRecommendedBy" class="block mb-1 text-sm font-medium">Recomendado por:</label>
+                    <input type="text" id="itemRecommendedBy" value="${recommenderName}" placeholder="Nome do recomendador" class="form-input">
+                </div>
+            `;
+        }
+
+        const content = `
+            <form id="addItemForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="itemTitle" placeholder="Título" class="form-input col-span-2" required>
+                    <input type="text" id="itemAuthor" placeholder="Autor/Artista" class="form-input" required>
+                    <select id="itemType" class="form-select" required><option value="Livro">Livro</option><option value="Revista">Revista</option><option value="Mídia Digital">Mídia Digital</option></select>
+                    <input type="text" id="itemPublisher" placeholder="Editora" class="form-input">
+                    <input type="number" id="itemYear" placeholder="Ano" class="form-input">
+                    <input type="text" id="itemIsbn" placeholder="ISBN/ISSN" class="form-input col-span-2" required>
+                    <input type="text" id="itemClassification" placeholder="Classificação (Ex: Fantasia)" class="form-input">
+                    <input type="text" id="itemLocation" placeholder="Localização (Ex: Corredor A)" class="form-input">
+                    ${recommendationField}
+                </div>
+                <div class="pt-4 border-t border-gray-700">
+                  <label for="itemQuantity" class="block mb-2 font-semibold">Quantidade de exemplares a criar:</label>
+                  <input type="number" id="itemQuantity" value="1" min="1" class="form-input w-full">
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Adicionar Item</button>
+            </form>`;
+        showModal("Adicionar Novo Item ao Acervo", content, 'max-w-3xl');
+        document.getElementById("addItemForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const recommendedByInput = document.getElementById("itemRecommendedBy");
+            const newItemData = {
+                title: document.getElementById("itemTitle").value, author: document.getElementById("itemAuthor").value,
+                type: document.getElementById("itemType").value, publisher: document.getElementById("itemPublisher").value,
+                year: document.getElementById("itemYear").value, isbn_issn: document.getElementById("itemIsbn").value,
+                classification: document.getElementById("itemClassification").value, location: document.getElementById("itemLocation").value,
+                recommendedBy: recommendedByInput ? (recommendedByInput.value || null) : null
+            };
+
+            try {
+                const itemDocRef = await addDoc(collection(db, "items"), newItemData);
+                
+                const quantity = parseInt(document.getElementById("itemQuantity").value) || 1;
+                const typePrefix = newItemData.type.substring(0,3).toUpperCase();
+                for(let i = 0; i < quantity; i++) {
+                    const barcode = `${typePrefix}${Date.now() + i}`;
+                    await addDoc(collection(db, "copies"), {
+                        itemId: itemDocRef.id,
+                        barcode: barcode,
+                        status: "Disponível"
+                    });
+                }
+                
+                await addDoc(collection(db, "notifications"), { 
+                    text: `Novo item adicionado: "${newItemData.title}"`, 
+                    unread: true, 
+                    timestamp: serverTimestamp(), 
+                    userId: null 
+                });
+                
+                await fetchAllData();
+                updateAll();
+                updateNotificationIndicator();
+                closeModal();
+            } catch (error) {
+                console.error("Error adding item: ", error);
+                alert("Falha ao adicionar o item.");
+            }
+        };
+    }
+
+    function showAddLoanModal() {
+        const availableCopies = allCopies.filter(c => c.status === 'Disponível').map(c => {
+            const item = allItems.find(i => i.id === c.itemId);
+            return `<option value="${c.id}">${item.title} (#${c.barcode})</option>`
+        }).join('');
+        const users = allUsers.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+
+        const content = `
+            <form id="addLoanForm" class="space-y-4">
+                <label>Exemplar Disponível</label><select id="loanCopyId" class="form-select">${availableCopies}</select>
+                <label>Usuário</label><select id="loanUserId" class="form-select">${users}</select>
+                <label>Data de Devolução</label><input type="date" id="loanDueDate" class="form-input" required>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Registrar Empréstimo</button>
+            </form>`;
+        showModal("Novo Empréstimo", content);
+        document.getElementById("addLoanForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const copyId = document.getElementById("loanCopyId").value;
+            const newLoanData = {
+                copyId: copyId,
+                userId: document.getElementById("loanUserId").value,
+                loanDate: new Date().toISOString().split('T')[0],
+                dueDate: document.getElementById("loanDueDate").value,
+                returnDate: null
+            };
+
+            try {
+                await addDoc(collection(db, "loans"), newLoanData);
+                const copyDocRef = doc(db, "copies", copyId);
+                await updateDoc(copyDocRef, { status: "Emprestado" });
+                
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch (error) {
+                console.error("Error adding loan: ", error);
+                alert("Falha ao registrar empréstimo.");
+            }
+        }
+    }
+
+    function showAddUserModal() {
+        const content = `
+              <form id="addUserForm" class="space-y-4">
+                  <input type="text" id="userName" placeholder="Nome Completo" class="form-input" required>
+                  <input type="email" id="userEmail" placeholder="Email para login" class="form-input" required>
+                  <input type="password" id="userPassword" placeholder="Senha inicial" class="form-input" required>
+                  <input type="tel" id="userPhone" placeholder="Telefone (Ex: 85912345678)" class="form-input" required>
+                  <select id="userRole" class="form-select">
+                      <option value="Leitor(a)">Leitor(a)</option>
+                      <option value="Professor(a)">Professor(a)</option>
+                      <option value="Admin">Admin</option>
+                  </select>
+                  <div id="classGradeContainer">
+                     <label for="userClassGrade" class="block mb-1 text-sm">Turma/Série</label>
+                     <select id="userClassGrade" class="form-select"></select>
+                  </div>
+                  <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Adicionar Usuário</button>
+              </form>`;
+        showModal("Adicionar Novo Usuário", content);
+        
+        const roleSelect = document.getElementById("userRole");
+        const classGradeContainer = document.getElementById("classGradeContainer");
+        populateClassGradeSelect('userClassGrade');
+
+        roleSelect.onchange = () => {
+            classGradeContainer.style.display = roleSelect.value === 'Leitor(a)' ? 'block' : 'none';
+        };
+
+        document.getElementById("addUserForm").onsubmit = async (e) => {
+            e.preventDefault();
+            alert("A criação de usuários com senha deve ser feita pelo painel do Firebase Authentication por segurança. Esta função criará apenas o perfil no banco de dados.");
+            
+            const role = document.getElementById("userRole").value;
+            const classGrade = role === 'Leitor(a)' ? document.getElementById("userClassGrade").value : null;
+            const newUserData = { 
+                name: document.getElementById("userName").value, 
+                phone: document.getElementById("userPhone").value, 
+                role: role, 
+                classGrade: classGrade
+            };
+
+            try {
+                // In a real scenario, you would create the user in Firebase Auth first, get the UID, then create the doc in Firestore with that UID.
+                await addDoc(collection(db, "users"), newUserData);
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch (error) {
+                console.error("Error adding user profile: ", error);
+                alert("Erro ao criar perfil do usuário. Crie o usuário no painel do Firebase Authentication primeiro.");
+            }
+        };
+    }
+
+    function generateCollapsibleClassSelectorHTML(selectedClasses = []) {
+        return `
+            <details class="bg-gray-800/50 rounded-lg border border-gray-700">
+                <summary class="p-3 cursor-pointer font-medium text-white">Selecionar Turmas</summary>
+                <div class="p-3 border-t border-gray-700 grid grid-cols-2 md:grid-cols-3 gap-3" style="max-height: 200px; overflow-y: auto;">
+                    ${classGradesList.map(grade => `
+                        <label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700/50">
+                            <input type="checkbox" name="classGrades" value="${grade}" class="form-checkbox h-4 w-4 text-emerald-500 rounded focus:ring-emerald-400 bg-slate-700 border-slate-600" ${selectedClasses.includes(grade) ? 'checked' : ''}>
+                            <span class="text-sm">${grade}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </details>
+        `;
+    }
+
+    function showAddOrEditAssessmentModal(assessmentId = null) {
+        const isEditing = assessmentId !== null;
+        const assessment = isEditing ? allAssessments.find(a => a.id === assessmentId) : {};
+        
+        const content = `
+            <form id="addOrEditAssessmentForm" class="space-y-4">
+                <input type="hidden" id="assessmentId" value="${assessmentId || ''}">
+                <div>
+                    <label for="assessmentType" class="block mb-1 text-sm">Tipo de Avaliação</label>
+                    <select id="assessmentType" class="form-select" required>
+                        <option value="Avaliação Parcial" ${assessment.type === 'Avaliação Parcial' ? 'selected':''}>Avaliação Parcial</option>
+                        <option value="Avaliação Bimestral" ${assessment.type === 'Avaliação Bimestral' ? 'selected':''}>Avaliação Bimestral</option>
+                        <option value="Prova de Diagnóstico" ${assessment.type === 'Prova de Diagnóstico' ? 'selected':''}>Prova de Diagnóstico</option>
+                        <option value="Avaliação de Recuperação" ${assessment.type === 'Avaliação de Recuperação' ? 'selected':''}>Avaliação de Recuperação</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="assessmentDiscipline" class="block mb-1 text-sm">Disciplina</label>
+                    <input type="text" id="assessmentDiscipline" class="form-input" value="${assessment.discipline || ''}" placeholder="Ex: Matemática" required>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="assessmentDate" class="block mb-1 text-sm">Data</label>
+                        <input type="date" id="assessmentDate" class="form-input" value="${assessment.date || ''}" required>
+                    </div>
+                    <div>
+                        <label for="assessmentTime" class="block mb-1 text-sm">Horário</label>
+                        <input type="time" id="assessmentTime" class="form-input" value="${assessment.time || ''}" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Turmas</label>
+                    ${generateCollapsibleClassSelectorHTML(assessment.classGrades)}
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">${isEditing ? 'Salvar Alterações' : 'Adicionar Avaliação'}</button>
+            </form>
+        `;
+        showModal(isEditing ? "Editar Avaliação" : "Adicionar Nova Avaliação", content);
+        document.getElementById('addOrEditAssessmentForm').onsubmit = handleAddOrEditAssessment;
+    }
+    
+    function showAddOrEditActivityModal(activityId = null) {
+        const isEditing = activityId !== null;
+        const activity = isEditing ? allActivities.find(a => a.id === activityId) : {};
+
+        const content = `
+            <form id="addOrEditActivityForm" class="space-y-4">
+                 <input type="hidden" id="activityId" value="${activityId || ''}">
+                <div>
+                    <label for="activityDiscipline" class="block mb-1 text-sm">Disciplina</label>
+                    <input type="text" id="activityDiscipline" class="form-input" value="${activity.discipline || ''}" placeholder="Ex: História" required>
+                </div>
+                 <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="activityDeliveryDate" class="block mb-1 text-sm">Data de Entrega</label>
+                        <input type="date" id="activityDeliveryDate" class="form-input" value="${activity.deliveryDate || ''}" required>
+                    </div>
+                    <div>
+                        <label for="activityDeliveryTime" class="block mb-1 text-sm">Horário de Entrega</label>
+                        <input type="time" id="activityDeliveryTime" class="form-input" value="${activity.deliveryTime || ''}" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm">Tipo de Atividade</label>
+                    <div class="flex gap-4">
+                        <label><input type="radio" name="activityType" value="Livro" class="form-radio" ${!activity.type || activity.type === 'Livro' ? 'checked' : ''}> Do Livro</label>
+                        <label><input type="radio" name="activityType" value="PDF" class="form-radio" ${activity.type === 'PDF' ? 'checked' : ''}> PDF</label>
+                        <label><input type="radio" name="activityType" value="Outro" class="form-radio" ${activity.type === 'Outro' ? 'checked' : ''}> Outro</label>
+                    </div>
+                </div>
+                <div id="activityFieldsBook">
+                    <div class="grid grid-cols-2 gap-4">
+                       <input type="text" id="activityPages" class="form-input" value="${activity.pages || ''}" placeholder="Página(s)">
+                       <input type="text" id="activityQuestions" class="form-input" value="${activity.questions || ''}" placeholder="Questão(ões)">
+                    </div>
+                </div>
+                <div id="activityFieldsPDF" class="hidden">
+                    <input type="url" id="activityLink" class="form-input" value="${activity.link || ''}" placeholder="https://link.para/o/arquivo.pdf">
+                </div>
+                <div id="activityFieldsOther" class="hidden">
+                    <textarea id="activityDescription" class="form-input" placeholder="Descreva a atividade">${activity.description || ''}</textarea>
+                </div>
+                 <div>
+                    <label class="block mb-2 text-sm font-medium">Turmas</label>
+                    ${generateCollapsibleClassSelectorHTML(activity.classGrades)}
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">${isEditing ? 'Salvar Alterações' : 'Adicionar Atividade'}</button>
+            </form>
+        `;
+        showModal(isEditing ? "Editar Atividade" : "Adicionar Nova Atividade", content, 'max-w-2xl');
+        
+        const typeRadios = document.querySelectorAll('input[name="activityType"]');
+        const handleRadioChange = (type) => {
+            document.getElementById('activityFieldsBook').style.display = (type === 'Livro') ? 'block' : 'none';
+            document.getElementById('activityFieldsPDF').style.display = (type === 'PDF') ? 'block' : 'none';
+            document.getElementById('activityFieldsOther').style.display = (type === 'Outro') ? 'block' : 'none';
+        }
+        typeRadios.forEach(radio => radio.onchange = (e) => handleRadioChange(e.target.value));
+        
+        handleRadioChange(document.querySelector('input[name="activityType"]:checked').value);
+        document.getElementById('addOrEditActivityForm').onsubmit = handleAddOrEditActivity;
+    }
 
     window.resetUserPassword = (userEmail) => {
-        if (!userEmail) {
-            alert("O e-mail deste usuário não está cadastrado no perfil.");
+      if (!userEmail) {
+          alert("O e-mail deste usuário não está cadastrado no perfil.");
+          return;
+      }
+
+      if (confirm(`Tem certeza que deseja enviar um e-mail de redefinição de senha para ${userEmail}?`)) {
+          sendPasswordResetEmail(auth, userEmail)
+              .then(() => {
+                  alert(`E-mail de redefinição enviado com sucesso para ${userEmail}.`);
+              })
+              .catch((error) => {
+                  console.error("Erro ao enviar e-mail de redefinição de senha:", error);
+                  alert("Ocorreu um erro ao tentar enviar o e-mail.");
+              });
+      }
+    };
+
+    // --- ACTION HANDLERS & CRUD ---
+    async function handleAddOrEditAssessment(e) {
+        e.preventDefault();
+        const assessmentId = document.getElementById('assessmentId').value;
+        const isEditing = !!assessmentId;
+        
+        const selectedClasses = Array.from(document.querySelectorAll('input[name="classGrades"]:checked')).map(cb => cb.value);
+        if (selectedClasses.length === 0) {
+            alert("Por favor, selecione pelo menos uma turma.");
             return;
         }
-        if (confirm(`Tem certeza que deseja enviar um e-mail de redefinição de senha para ${userEmail}?`)) {
-            sendPasswordResetEmail(auth, userEmail)
-                .then(() => {
-                    alert(`E-mail de redefinição enviado com sucesso para ${userEmail}.`);
-                })
-                .catch((error) => {
-                    console.error("Erro ao enviar e-mail de redefinição de senha:", error);
-                    alert("Ocorreu um erro ao tentar enviar o e-mail.");
+
+        const data = {
+            type: document.getElementById('assessmentType').value,
+            discipline: document.getElementById('assessmentDiscipline').value,
+            date: document.getElementById('assessmentDate').value,
+            time: document.getElementById('assessmentTime').value,
+            classGrades: selectedClasses,
+            professorName: currentUser.name,
+            professorUid: currentUser.uid,
+        };
+
+        try {
+            if (isEditing) {
+                await updateDoc(doc(db, "assessments", assessmentId), data);
+            } else {
+                data.createdAt = serverTimestamp();
+                await addDoc(collection(db, "assessments"), data);
+            }
+            await fetchAllData();
+            updateAll();
+            closeModal();
+        } catch (error) {
+            console.error("Error saving assessment: ", error);
+            alert("Erro ao salvar avaliação.");
+        }
+    }
+
+    async function handleAddOrEditActivity(e) {
+        e.preventDefault();
+        const activityId = document.getElementById('activityId').value;
+        const isEditing = !!activityId;
+
+        const selectedClasses = Array.from(document.querySelectorAll('input[name="classGrades"]:checked')).map(cb => cb.value);
+        if (selectedClasses.length === 0) {
+            alert("Por favor, selecione pelo menos uma turma.");
+            return;
+        }
+
+        const type = document.querySelector('input[name="activityType"]:checked').value;
+        const data = {
+            discipline: document.getElementById('activityDiscipline').value,
+            deliveryDate: document.getElementById('activityDeliveryDate').value,
+            deliveryTime: document.getElementById('activityDeliveryTime').value,
+            type: type,
+            classGrades: selectedClasses,
+            professorName: currentUser.name,
+            professorUid: currentUser.uid,
+        };
+
+        if (type === 'Livro') {
+            data.pages = document.getElementById('activityPages').value;
+            data.questions = document.getElementById('activityQuestions').value;
+        } else if (type === 'PDF') {
+            data.link = document.getElementById('activityLink').value;
+        } else {
+            data.description = document.getElementById('activityDescription').value;
+        }
+
+        try {
+             if (isEditing) {
+                await updateDoc(doc(db, "activities", activityId), data);
+            } else {
+                data.createdAt = serverTimestamp();
+                await addDoc(collection(db, "activities"), data);
+            }
+            await fetchAllData();
+            updateAll();
+            closeModal();
+        } catch (error) {
+            console.error("Error saving activity: ", error);
+            alert("Erro ao salvar atividade.");
+        }
+    }
+    
+    window.requestReservation = async (itemId) => {
+        const item = allItems.find(i => i.id === itemId);
+        
+        const hasPendingReservation = allReservations.some(r => r.userId === currentUser.uid && r.itemId === itemId && r.status === 'Pendente');
+        if (hasPendingReservation) {
+            alert('Você já possui uma reserva pendente para este item.');
+            return;
+        }
+
+        if (confirm(`Confirmar solicitação de reserva para "${item.title}" em nome de ${currentUser.name}?`)) {
+            const newReservation = {
+                userId: currentUser.uid,
+                userName: currentUser.name,
+                itemId: item.id,
+                itemTitle: item.title,
+                requestDate: new Date().toISOString(),
+                status: 'Pendente',
+                copyId: null
+            };
+            
+            try {
+                await addDoc(collection(db, "reservations"), newReservation);
+                await addDoc(collection(db, "notifications"), { 
+                    text: `Nova reserva de "${item.title}" por ${currentUser.name}.`, 
+                    unread: true, 
+                    timestamp: serverTimestamp(), 
+                    userId: null 
                 });
+                
+                await fetchAllData();
+                updateAll();
+                updateNotificationIndicator();
+                closeModal();
+                alert('Solicitação de reserva enviada com sucesso! Você será notificado sobre a aprovação.');
+            } catch(e) { console.error(e); alert("Erro ao solicitar reserva.")}
         }
     };
 
     window.approveReservation = async (reservationId) => {
-        const reservation = allReservations.find(r => r.id === reservationId);
-        if (!reservation) {
-            alert('Reserva não encontrada.');
-            return;
-        }
-        const availableCopy = allCopies.find(c => c.itemId === reservation.itemId && c.status === 'Disponível');
-        if (!availableCopy) {
-            alert('Não há exemplares disponíveis para este item. A reserva não pode ser convertida em empréstimo.');
-            return;
-        }
-        const loanDate = new Date();
-        const dueDate = new Date();
-        dueDate.setDate(loanDate.getDate() + 14); // Empréstimo de 14 dias
-        const newLoanData = {
-            copyId: availableCopy.id,
-            userId: reservation.userId,
-            loanDate: loanDate.toISOString().split('T')[0],
-            dueDate: dueDate.toISOString().split('T')[0],
-            returnDate: null
-        };
+      const reservation = allReservations.find(r => r.id === reservationId);
+      if (!reservation) {
+          alert('Reserva não encontrada.');
+          return;
+      }
+
+      const availableCopy = allCopies.find(c => c.itemId === reservation.itemId && c.status === 'Disponível');
+
+      if (!availableCopy) {
+          alert('Não há exemplares disponíveis para este item. A reserva não pode ser convertida em empréstimo.');
+          return;
+      }
+
+      const loanDate = new Date();
+      const dueDate = new Date();
+      dueDate.setDate(loanDate.getDate() + 14); 
+
+      const newLoanData = {
+          copyId: availableCopy.id,
+          userId: reservation.userId,
+          loanDate: loanDate.toISOString().split('T')[0],
+          dueDate: dueDate.toISOString().split('T')[0],
+          returnDate: null
+      };
+
+      try {
+          await addDoc(collection(db, "loans"), newLoanData);
+          await updateDoc(doc(db, "copies", availableCopy.id), { status: 'Emprestado' });
+          await deleteDoc(doc(db, "reservations", reservationId));
+          
+          await addDoc(collection(db, "notifications"), { 
+              text: `Sua reserva para "${reservation.itemTitle}" foi APROVADA e o empréstimo já foi iniciado!`, 
+              unread: true, 
+              timestamp: serverTimestamp(), 
+              userId: reservation.userId 
+          });
+
+          await fetchAllData();
+          updateAll();
+          updateNotificationIndicator();
+
+          alert('Reserva aprovada! O empréstimo foi iniciado e já consta na lista de Empréstimos Ativos.');
+
+      } catch(e) { 
+          console.error("Erro ao aprovar reserva e criar empréstimo:", e); 
+          alert("Ocorreu um erro ao aprovar a reserva.")
+      }
+    };
+    
+    window.declineReservation = async (reservationId) => {
+        if (!confirm('Tem certeza que deseja recusar esta solicitação de reserva?')) return;
+        
         try {
-            await addDoc(collection(db, "loans"), newLoanData);
-            await updateDoc(doc(db, "copies", availableCopy.id), { status: 'Emprestado' });
-            await deleteDoc(doc(db, "reservations", reservationId));
+            const reservation = allReservations.find(r => r.id === reservationId);
             await addDoc(collection(db, "notifications"), { 
-                text: `Sua reserva para "${reservation.itemTitle}" foi APROVADA e o empréstimo já foi iniciado!`, 
+                text: `Sua reserva para "${reservation.itemTitle}" foi RECUSADA.`, 
                 unread: true, 
                 timestamp: serverTimestamp(), 
                 userId: reservation.userId 
             });
+            await deleteDoc(doc(db, "reservations", reservationId));
+
             await fetchAllData();
             updateAll();
             updateNotificationIndicator();
-            alert('Reserva aprovada! O empréstimo foi iniciado e já consta na lista de Empréstimos Ativos.');
-        } catch(e) { 
-            console.error("Erro ao aprovar reserva e criar empréstimo:", e); 
-            alert("Ocorreu um erro ao aprovar a reserva.")
+            alert('Reserva recusada.');
+        } catch(e) { console.error(e); alert("Erro ao recusar reserva.")}
+    };
+    
+    window.showReturnConditionModal = (loanId) => {
+        const content = `
+            <form id="returnConditionForm" class="space-y-4">
+                <p>Qual o estado do item devolvido?</p>
+                <select id="returnCondition" class="form-select">
+                    <option value="bom-estado">Em bom estado</option>
+                    <option value="danificado">Devolvido com danos</option>
+                    <option value="extraviado">Extraviado / Furtado</option>
+                </select>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Confirmar Devolução</button>
+            </form>
+        `;
+        showModal("Confirmar Devolução", content);
+        document.getElementById("returnConditionForm").onsubmit = (e) => {
+            e.preventDefault();
+            const condition = document.getElementById("returnCondition").value;
+            processReturn(loanId, condition);
+        };
+    }
+
+    async function processReturn(loanId, condition) {
+        const loan = allLoans.find(l => l.id === loanId);
+        
+        let newStatus = "Disponível";
+        switch(condition) {
+            case 'danificado': newStatus = "Danificado"; alert("Item registrado como danificado. Verifique a política de multas."); break;
+            case 'extraviado': newStatus = "Extraviado"; alert("Item registrado como extraviado. O usuário será notificado."); break;
+        }
+
+        try {
+            await updateDoc(doc(db, "loans", loanId), { returnDate: new Date().toISOString().split('T')[0] });
+            await updateDoc(doc(db, "copies", loan.copyId), { status: newStatus });
+            
+            await fetchAllData();
+            updateAll();
+            closeModal();
+        } catch(e) { console.error(e); alert("Erro ao processar devolução.")}
+    }
+
+    window.renewLoan = async (loanId) => {
+        if (!confirm('Deseja realmente renovar este empréstimo por mais 7 dias?')) return;
+        const newDueDate = new Date();
+        newDueDate.setDate(newDueDate.getDate() + 7);
+
+        try {
+            await updateDoc(doc(db, "loans", loanId), { dueDate: newDueDate.toISOString().split('T')[0] });
+            await fetchAllData();
+            updateAll();
+            alert('Empréstimo renovado com sucesso!');
+        } catch(e) { console.error(e); alert("Erro ao renovar empréstimo.")}
+    };
+    
+    window.removeUser = async (userId) => {
+        if (!confirm('Tem certeza que deseja remover este usuário? Esta ação não pode ser desfeita.')) return;
+        
+        const userHasActiveLoans = allLoans.some(l => l.userId === userId && !l.returnDate);
+        if (userHasActiveLoans) {
+            alert('Não é possível remover usuários com empréstimos ativos.');
+            return;
+        }
+
+        try {
+            await deleteDoc(doc(db, "users", userId));
+            alert("Perfil do usuário removido. Lembre-se de remover o login dele na aba Authentication do Firebase.");
+            await fetchAllData();
+            updateAll();
+        } catch(e) { console.error(e); alert("Erro ao remover usuário.")}
+    };
+
+    window.deleteActivity = async (activityId) => {
+        if (!confirm('Tem certeza que deseja remover esta atividade?')) return;
+        try {
+            await deleteDoc(doc(db, "activities", activityId));
+            await fetchAllData();
+            updateAll();
+        } catch (e) { console.error(e); alert("Erro ao remover atividade.") }
+    };
+
+    window.deleteAssessment = async (assessmentId) => {
+        if (!confirm('Tem certeza que deseja remover esta avaliação?')) return;
+        try {
+            await deleteDoc(doc(db, "assessments", assessmentId));
+            await fetchAllData();
+            updateAll();
+        } catch (e) { console.error(e); alert("Erro ao remover avaliação.") }
+    };
+    
+    window.showEditUserModal = (userId) => {
+        const user = allUsers.find(u => u.id === userId);
+        const content = `
+            <form id="editUserForm" class="space-y-4">
+                <input type="hidden" id="editUserId" value="${user.id}">
+                <label>Nome</label><input type="text" id="editUserName" class="form-input" value="${user.name}" required>
+                <label>Telefone</label><input type="tel" id="editUserPhone" class="form-input" value="${user.phone}" required>
+                <label>Perfil</label><select id="editUserRole" class="form-select">
+                    <option value="Leitor(a)" ${user.role === 'Leitor(a)' ? 'selected' : ''}>Leitor(a)</option>
+                    <option value="Professor(a)" ${user.role === 'Professor(a)' ? 'selected' : ''}>Professor(a)</option>
+                    <option value="Admin" ${user.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                </select>
+                <div id="editClassGradeContainer" style="display: ${user.role === 'Leitor(a)' ? 'block' : 'none'}">
+                    <label for="editUserClassGrade" class="block mb-1 text-sm">Turma/Série</label>
+                    <select id="editUserClassGrade" class="form-select"></select>
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
+            </form>
+        `;
+        showModal("Editar Usuário", content);
+
+        populateClassGradeSelect('editUserClassGrade', user.classGrade);
+        const roleSelect = document.getElementById("editUserRole");
+        const classGradeContainer = document.getElementById("editClassGradeContainer");
+        roleSelect.onchange = () => {
+            classGradeContainer.style.display = roleSelect.value === 'Leitor(a)' ? 'block' : 'none';
+        };
+        
+        document.getElementById('editUserForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const role = document.getElementById('editUserRole').value;
+            const updatedData = {
+                name: document.getElementById('editUserName').value,
+                phone: document.getElementById('editUserPhone').value,
+                role: role,
+                classGrade: role === 'Leitor(a)' ? document.getElementById('editUserClassGrade').value : null
+            };
+
+            try {
+                await updateDoc(doc(db, "users", userId), updatedData);
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch(e) { console.error(e); alert("Erro ao atualizar usuário.") }
+        };
+    }
+    
+    window.showEditItemModal = (itemId) => {
+        const item = allItems.find(i => i.id === itemId);
+        const content = `
+            <form id="editItemForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="editItemTitle" placeholder="Título" class="form-input col-span-2" value="${item.title}" required>
+                    <input type="text" id="editItemAuthor" placeholder="Autor/Artista" class="form-input" value="${item.author}" required>
+                    <select id="editItemType" class="form-select" required>
+                        <option value="Livro" ${item.type === 'Livro' ? 'selected' : ''}>Livro</option>
+                        <option value="Revista" ${item.type === 'Revista' ? 'selected' : ''}>Revista</option>
+                        <option value="Mídia Digital" ${item.type === 'Mídia Digital' ? 'selected' : ''}>Mídia Digital</option>
+                    </select>
+                    <input type="text" id="editItemPublisher" placeholder="Editora" class="form-input" value="${item.publisher}">
+                    <input type="number" id="editItemYear" placeholder="Ano" class="form-input" value="${item.year}">
+                    <input type="text" id="editItemIsbn" placeholder="ISBN/ISSN" class="form-input col-span-2" value="${item.isbn_issn}" required>
+                    <input type="text" id="editItemClassification" placeholder="Classificação" class="form-input" value="${item.classification}">
+                    <input type="text" id="editItemLocation" placeholder="Localização" class="form-input" value="${item.location}">
+                    <div class="col-span-2">
+                        <label for="editItemRecommendedBy" class="block mb-1 text-sm font-medium">Recomendado por:</label>
+                        <input type="text" id="editItemRecommendedBy" value="${item.recommendedBy || ''}" placeholder="Nome do recomendador" class="form-input">
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Salvar Alterações</button>
+            </form>`;
+        showModal("Editar Item", content, 'max-w-3xl');
+        document.getElementById('editItemForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const updatedData = {
+                title: document.getElementById('editItemTitle').value,
+                author: document.getElementById('editItemAuthor').value,
+                type: document.getElementById('editItemType').value,
+                publisher: document.getElementById('editItemPublisher').value,
+                year: document.getElementById('editItemYear').value,
+                isbn_issn: document.getElementById('editItemIsbn').value,
+                classification: document.getElementById('editItemClassification').value,
+                location: document.getElementById('editItemLocation').value,
+                recommendedBy: document.getElementById('editItemRecommendedBy').value || null
+            };
+            try {
+                await updateDoc(doc(db, "items", itemId), updatedData);
+                await fetchAllData();
+                updateAll();
+                closeModal();
+            } catch(e) { console.error(e); alert("Erro ao editar item.")}
+        };
+    };
+
+    window.deleteItem = async (itemId) => {
+        if (!confirm('Tem certeza que deseja excluir este item? TODOS os seus exemplares serão removidos permanentemente.')) return;
+        
+        try {
+            const copiesToDelete = allCopies.filter(c => c.itemId === itemId);
+            for (const copy of copiesToDelete) {
+                await deleteDoc(doc(db, "copies", copy.id));
+            }
+            await deleteDoc(doc(db, "items", itemId));
+            
+            await fetchAllData();
+            alert('Item e todos os seus exemplares foram removidos.');
+            updateAll();
+            closeModal();
+        } catch(e) { console.error(e); alert("Erro ao deletar item.")}
+    };
+
+    window.handleEquipmentReservationRequest = async (e) => {
+        e.preventDefault();
+        const reservationDate = document.getElementById("reservationDate").value;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const selectedDate = new Date(reservationDate + 'T00:00:00-03:00');
+
+        if (selectedDate < today) {
+            alert("Não é possível agendar em uma data passada.");
+            return;
+        }
+
+        const newReservationData = {
+            userId: currentUser.uid,
+            userName: currentUser.name,
+            equipmentType: document.getElementById("equipmentType").value,
+            reservationDate: reservationDate,
+            reason: document.getElementById("reservationReason").value,
+            status: 'Pendente',
+            requestTimestamp: serverTimestamp()
+        };
+
+        try {
+            await addDoc(collection(db, "equipmentReservations"), newReservationData);
+            await addDoc(collection(db, "notifications"), {
+                text: `Novo agendamento de ${newReservationData.equipmentType} solicitado por ${currentUser.name}.`,
+                unread: true,
+                timestamp: serverTimestamp(),
+                userId: null
+            });
+            alert('Solicitação de agendamento enviada com sucesso! Você será notificado sobre a aprovação.');
+            e.target.reset();
+            await fetchAllData();
+            updateAll();
+            updateNotificationIndicator();
+        } catch (error) {
+            console.error("Error creating equipment reservation:", error);
+            alert("Ocorreu um erro ao enviar sua solicitação.");
         }
     };
+
+    window.approveEquipmentReservation = async (reservationId) => {
+        if (!confirm('Tem certeza que deseja APROVAR este agendamento?')) return;
+        try {
+            const reservation = allEquipmentReservations.find(r => r.id === reservationId);
+            await updateDoc(doc(db, "equipmentReservations", reservationId), { status: 'Aprovada' });
+            await addDoc(collection(db, "notifications"), {
+                text: `Seu agendamento de ${reservation.equipmentType} para ${new Date(reservation.reservationDate + 'T00:00:00-03:00').toLocaleDateString('pt-BR')} foi APROVADO.`,
+                unread: true,
+                timestamp: serverTimestamp(),
+                userId: reservation.userId
+            });
+            await fetchAllData();
+            updateAll();
+            updateNotificationIndicator();
+        } catch (e) { console.error(e); alert("Erro ao aprovar agendamento.") }
+    };
+
+    window.declineEquipmentReservation = async (reservationId) => {
+        if (!confirm('Tem certeza que deseja RECUSAR este agendamento?')) return;
+        try {
+            const reservation = allEquipmentReservations.find(r => r.id === reservationId);
+            await updateDoc(doc(db, "equipmentReservations", reservationId), { status: 'Recusada' });
+            await addDoc(collection(db, "notifications"), {
+                text: `Seu agendamento de ${reservation.equipmentType} para ${new Date(reservation.reservationDate + 'T00:00:00-03:00').toLocaleDateString('pt-BR')} foi RECUSADO.`,
+                unread: true,
+                timestamp: serverTimestamp(),
+                userId: reservation.userId
+            });
+            await fetchAllData();
+            updateAll();
+            updateNotificationIndicator();
+        } catch (e) { console.error(e); alert("Erro ao recusar agendamento.") }
+    };
+
+    // --- NOTIFICATION SYSTEM ---
+    function updateNotificationIndicator() {
+        if (!currentUser) return;
+        const isAdminOrProfessor = currentUser.role === 'Admin' || currentUser.role === 'Professor(a)';
+
+        const hasUnread = allNotifications.some(n =>
+            n.unread && (
+                (n.userId === null && isAdminOrProfessor) || // General notifications for Admins/Profs
+                (n.userId === currentUser.uid) // Specific notifications for any user
+            )
+        );
+        document.getElementById('notificationIndicator').classList.toggle('hidden', !hasUnread);
+    }
+
+    async function showNotificationsModal() {
+        const isAdminOrProfessor = currentUser.role === 'Admin' || currentUser.role === 'Professor(a)';
+        
+        const relevantNotifications = allNotifications.filter(n => 
+            (n.userId === null && isAdminOrProfessor) || (n.userId === currentUser.uid)
+        );
+
+        const notificationsHtml = relevantNotifications
+            .sort((a,b) => b.timestamp.toMillis() - a.timestamp.toMillis())
+            .map(n => `<div class="p-3 bg-gray-800/50 rounded-lg"><p class="font-semibold text-white">${n.text}</p><p class="text-xs text-gray-400">${n.timestamp.toDate().toLocaleString('pt-BR')}</p></div>`)
+            .join('');
+        
+        showModal("Notificações", `<div class="space-y-3">${notificationsHtml || '<p>Nenhuma notificação.</p>'}</div>`);
+        
+        // Mark notifications as read
+        for (const n of relevantNotifications) {
+            if(n.unread) {
+                await updateDoc(doc(db, "notifications", n.id), { unread: false });
+            }
+        }
+        await fetchAllData();
+        updateNotificationIndicator();
+    }
 
     // --- CADASTRO DE USUÁRIOS ---
     const showRegisterBtn = document.getElementById('showRegisterBtn');
@@ -1086,7 +2498,24 @@ onAuthStateChanged(auth, async (user) => {
     const professorFields = document.getElementById('professorFields');
     const registerError = document.getElementById('registerError');
 
-    function showRegisterModal() { registerModal.classList.remove('hidden'); }
+    function populateClassGradeSelect(selectId, selectedValue = '') {
+        const select = document.getElementById(selectId);
+        select.innerHTML = `<option value="">Selecione uma turma</option>`;
+        classGradesList.forEach(grade => {
+            const option = document.createElement('option');
+            option.value = grade;
+            option.textContent = grade;
+            if (grade === selectedValue) {
+                option.selected = true;
+            }
+            select.appendChild(option);
+        });
+    }
+
+    function showRegisterModal() {
+        populateClassGradeSelect('registerClassGrade');
+        registerModal.classList.remove('hidden');
+    }
     function closeRegisterModal() {
         registerModal.classList.add('hidden');
         registerForm.reset();
@@ -1110,23 +2539,40 @@ onAuthStateChanged(auth, async (user) => {
     async function handleRegistration(e) {
         e.preventDefault();
         registerError.classList.add('hidden');
+
         const name = document.getElementById('registerName').value;
         const email = document.getElementById('registerEmail').value;
         const phone = document.getElementById('registerPhone').value;
         const password = document.getElementById('registerPassword').value;
         const role = document.querySelector('input[name="userType"]:checked').value;
-        let userData = { name, email, phone, role };
+
+      let userData = {
+        name,
+        email,
+        phone,
+        role
+      };
+
         if (role === 'Leitor(a)') {
             userData.classGrade = document.getElementById('registerClassGrade').value || null;
+             if (!userData.classGrade) {
+                registerError.textContent = 'Por favor, selecione sua turma/série.';
+                registerError.classList.remove('hidden');
+                return;
+            }
         } else {
             userData.subject = document.getElementById('registerSubject').value || null;
         }
+
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
+
             await setDoc(doc(db, "users", user.uid), userData);
+
             alert("Cadastro realizado com sucesso! Você já pode fazer o login.");
             closeRegisterModal();
+
         } catch (error) {
             console.error("Erro no cadastro:", error);
             if (error.code === 'auth/email-already-in-use') {
@@ -1147,11 +2593,19 @@ onAuthStateChanged(auth, async (user) => {
       const activeTab = document.querySelector(".nav-item.active")?.dataset.section || 'dashboard';
       switchTab(activeTab, false);
     }
+
     function switchTab(sectionId, changeHistory = true) {
       if (!currentUser) return;
-      const allowedSectionsMap = { 'Admin': ['dashboard', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes'], 'Professor(a)': ['dashboard', 'acervo', 'relatorios'], 'Leitor(a)': ['acervo'] };
+      const allowedSectionsMap = {
+          'Admin': ['dashboard', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes', 'agendamentos', 'calendario', 'atividades', 'avaliacoes'],
+          'Professor(a)': ['dashboard', 'acervo', 'relatorios', 'agendamentos', 'calendario', 'atividades', 'avaliacoes'],
+          'Leitor(a)': ['acervo', 'meus-emprestimos', 'atividades', 'avaliacoes']
+      };
       const allowed = allowedSectionsMap[currentUser.role];
-      if (!allowed.includes(sectionId)) { sectionId = allowed[0]; }
+      if (!allowed.includes(sectionId)) {
+          sectionId = allowed[0]; 
+      }
+      
       if (changeHistory) {
           document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
           const newActive = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
@@ -1159,31 +2613,62 @@ onAuthStateChanged(auth, async (user) => {
       }
       document.querySelectorAll(".tab-content").forEach(s => s.classList.add("hidden"));
       document.getElementById(sectionId)?.classList.remove("hidden");
-      if (sectionId === 'acervo') renderAcervo();
+      
+      if (sectionId === 'acervo') {
+        populateClassificationFilter();
+        const searchTerm = document.getElementById('searchInput').value;
+        const classification = document.getElementById('classificationFilter').value;
+        renderAcervo(searchTerm, classification);
+      }
       if (sectionId === 'reservas') renderReservations();
       if (sectionId === 'emprestimos') renderLoans();
       if (sectionId === 'usuarios') renderUsers();
       if (sectionId === 'relatorios') renderReports();
+      if (sectionId === 'agendamentos') renderAgendamentos();
+      if (sectionId === 'meus-emprestimos') renderMeusEmprestimos();
+      if (sectionId === 'avaliacoes') renderAvaliacoes();
+      if (sectionId === 'atividades') renderAtividades();
+      if (sectionId === 'calendario') {
+          currentCalendarDate = new Date();
+          renderCalendario();
+      }
     }
+
     document.getElementById("sidebarNav").addEventListener("click", (e) => {
       const navItem = e.target.closest(".nav-item");
       if (navItem) { e.preventDefault(); switchTab(navItem.dataset.section); }
     });
+    
     document.getElementById("searchInput").addEventListener("input", (e) => {
-        switchTab('acervo'); renderAcervo(e.target.value);
+        switchTab('acervo');
+        const classification = document.getElementById('classificationFilter').value;
+        renderAcervo(e.target.value, classification);
     });
+
+    document.getElementById("classificationFilter").addEventListener("change", (e) => {
+        const searchTerm = document.getElementById('searchInput').value;
+        renderAcervo(searchTerm, e.target.value);
+    });
+    
     document.getElementById("btnAddItem").onclick = showAddItemModal;
     document.getElementById("btnAddLoan").onclick = showAddLoanModal;
     document.getElementById("btnAddUser").onclick = showAddUserModal;
     document.getElementById("btnViewReports").onclick = () => switchTab('relatorios');
+    document.getElementById("btnNewSchedule").onclick = () => switchTab('agendamentos');
     document.getElementById("notificationBtn").onclick = showNotificationsModal;
     document.getElementById("btnDownloadReport").onclick = generateReportPDF;
+    
     document.getElementById("loginForm").addEventListener('submit', handleLogin);
     document.getElementById("logoutBtn").addEventListener('click', handleLogout);
-    showRegisterBtn.addEventListener('click', (e) => { e.preventDefault(); showRegisterModal(); });
+
+    showRegisterBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        showRegisterModal();
+    });
     registerModalClose.addEventListener('click', closeRegisterModal);
     registerForm.addEventListener('submit', handleRegistration);
 
 </script>
 </body>
 </html>
+
