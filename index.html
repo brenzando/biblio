@@ -13,6 +13,16 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F12' || 
+               (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+               (e.ctrlKey && e.key.toUpperCase() === 'U')) {
+                e.preventDefault();
+            }
+        });
+    </script>
     <style>
       :root {
         --primary: #10b981; /* Emerald 500 */
@@ -33,7 +43,7 @@
       }
 
       .login-background {
-          background: linear-gradient(-45deg, var(--bg-start), var(--bg-end), #063526, #111827);
+          background: linear-gradient(-45deg, var(--bg-start), var(--bg-end), #06090f, #06090f);
           background-size: 400% 400%;
           animation: gradient-animation 25s ease infinite;
       }
@@ -254,6 +264,21 @@
           }
       }
 
+      .loader-spinner {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: 6px solid #374151; /* gray-700 */
+        border-top-color: var(--primary);
+        animation: sophisticated-spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      }
+
+      @keyframes sophisticated-spin {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(180deg) scale(0.9); }
+        100% { transform: rotate(360deg) scale(1); }
+      }
+
       /* Modal animation */
       .modal.hidden .modal-container {
         transform: scale(0.95);
@@ -268,14 +293,15 @@
 <body class="text-gray-300">
   
 <div id="loader" class="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900 transition-opacity duration-300 ease-in-out">
-    <div class="w-16 h-16 border-4 border-t-emerald-500 border-gray-700 rounded-full animate-spin"></div>
+    <div class="loader-spinner"></div>
 </div>
 
 <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 login-background">
     <div class="w-full max-w-md">
         <form id="loginForm" class="glass-effect rounded-2xl p-8 space-y-6">
             <div class="text-center">
-                <i class="fas fa-book-open text-4xl" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                <i class="fas fa-book-open text-4xl" 
+                style="background: linear-gradient(135deg, var(--primary), var(--secondary)); --webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
                 <h1 class="text-3xl font-bold text-white mt-2">BiblioSys</h1>
                 <p>EEMTI Profa. Adalgisa Bonfim Soares</p>
             </div>
@@ -290,16 +316,14 @@
             <p id="loginError" class="text-red-400 text-sm text-center hidden">Email ou senha inválidos.</p>
             <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Entrar</button>
             
-            <div class="text-center mt-4">
+            <div class="text-center mt-4 flex flex-col items-center space-y-2">
                 <a href="#" id="showRegisterBtn" class="text-sm text-emerald-400 hover:text-emerald-300 font-semibold">Não tem uma conta? Cadastre-se</a>
-            </div>
-
-            <div class="text-xs text-center text-gray-400 pt-4">
-                <p>Use: <span class="font-mono">admin@bibliosys.com / 123456</span> (Admin)</p>
-                <p>Use: <span class="font-mono">professor@bibliosys.com / prof123</span> (Professor)</p>
-                <p>Use: <span class="font-mono">leitor@bibliosys.com / 1234</span> (Leitor)</p>
+                <a href="#" id="forgotPasswordBtn" class="text-sm text-gray-400 hover:text-white">Esqueceu a senha?</a>
             </div>
         </form>
+    </div>
+    <div class="absolute bottom-6 text-center text-xs text-gray-400">
+        Desenvolvido por <a href="https://www.instagram.com/brenzando" target="_blank" class="font-semibold text-emerald-400 hover:text-emerald-300">Brendon Gonçalves</a>
     </div>
 </div>
 
@@ -309,7 +333,7 @@
     <aside class="glass-effect" style="position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-width); display: flex; flex-direction: column; padding: 1.5rem;">
         <div class="flex items-center space-x-4 pb-6 border-b border-gray-700/50">
             <div class="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-book-open text-xl" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                <i class="fas fa-book-open text-xl" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); --webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
             </div>
             <div>
                 <h1 class="text-2xl font-bold text-white">BiblioSys</h1>
@@ -374,6 +398,13 @@
                 <span>Empréstimos</span>
             </div>
           </a>
+          <a href="#" class="nav-item" data-section="solicitacoes">
+            <div class="nav-item-content">
+                <i class="fas fa-user-check"></i>
+                <span>Solicitações</span>
+            </div>
+            <span id="solicitacoesIndicator" class="badge bg-amber-500 text-white"></span>
+          </a>
           <a href="#" class="nav-item" data-section="usuarios">
             <div class="nav-item-content">
                 <i class="fas fa-users"></i>
@@ -388,11 +419,23 @@
           </a>
         </nav>
   
-        <div class="pt-6 mt-6 border-t border-gray-700/50 space-y-4">
-             <button id="logoutBtn" title="Sair do Sistema" class="w-full flex items-center px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors">
-                <i class="fas fa-sign-out-alt mr-3"></i>
-                <span>Sair do Sistema</span>
+        <div class="pt-6 mt-6 border-t border-gray-700/50 space-y-2">
+             <button id="reloadBtn" title="Atualizar dados" class="w-full flex items-center px-4 py-3 rounded-lg text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-300 transition-colors">
+                 <i class="fas fa-sync-alt mr-3"></i>
+                 <span>Atualizar</span>
              </button>
+             <button id="changePasswordBtn" title="Alterar senha" class="w-full flex items-center px-4 py-3 rounded-lg text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-300 transition-colors">
+                <i class="fas fa-key mr-3"></i>
+                <span>Alterar senha</span>
+             </button>
+             <button id="logoutBtn" title="Sair do Sistema" class="w-full flex items-center px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors">
+                 <i class="fas fa-sign-out-alt mr-3"></i>
+                 <span>Sair</span>
+             </button>
+        </div>
+
+        <div class="text-center text-xs text-gray-500 mt-auto pt-4">
+            Desenvolvido por <a href="https://www.instagram.com/brenzando" target="_blank" class="font-semibold text-emerald-400 hover:text-emerald-300">Brendon Gonçalves</a>
         </div>
     </aside>
   
@@ -409,54 +452,54 @@
                 </div>
             </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 100ms;">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-sm opacity-80">Livros no acervo</p>
-                  <p class="text-2xl font-bold" id="dashboardItems">0</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 100ms;">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm opacity-80">Livros no acervo</p>
+                    <p class="text-2xl font-bold" id="dashboardItems">0</p>
+                  </div>
+                  <i class="fas fa-book-bookmark text-2xl opacity-70"></i>
                 </div>
-                <i class="fas fa-book-bookmark text-2xl opacity-70"></i>
+              </div>
+              <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 200ms;">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm opacity-80">Empréstimos ativos</p>
+                    <p class="text-2xl font-bold" id="dashboardLoans">0</p>
+                  </div>
+                  <i class="fas fa-exchange-alt text-2xl opacity-70"></i>
+                </div>
+              </div>
+              <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 300ms;">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm opacity-80">Usuários</p>
+                    <p class="text-2xl font-bold" id="dashboardUsers">0</p>
+                  </div>
+                  <i class="fas fa-users text-2xl opacity-70"></i>
+                </div>
+              </div>
+              <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 400ms;">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm opacity-80">Atrasados</p>
+                    <p class="text-2xl font-bold" id="dashboardOverdue">0</p>
+                  </div>
+                  <i class="fas fa-hourglass-half text-2xl opacity-70"></i>
+                </div>
               </div>
             </div>
-            <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 200ms;">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-sm opacity-80">Empréstimos ativos</p>
-                  <p class="text-2xl font-bold" id="dashboardLoans">0</p>
+            <div id="quickActionsBlock" class="glass-effect rounded-2xl p-6 mt-6 animated-item" style="animation-delay: 500ms;">
+                <h2 class="text-xl font-semibold mb-6">Acessos rápidos</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                    <button class="action-btn" id="btnAddItem" title="Adicionar novo livro ao acervo"><i class="fas fa-plus-circle text-2xl text-emerald-400"></i><span>Adicionar</span></button>
+                    <button class="action-btn" id="btnAddLoan" title="Registrar novo empréstimo"><i class="fas fa-hand-holding-usd text-2xl text-emerald-400"></i><span>Empréstimos</span></button>
+                    <button class="action-btn" id="btnNewSchedule" title="Agendar um equipamento"><i class="fas fa-calendar-plus text-2xl text-blue-400"></i><span>Agendar</span></button>
+                    <button class="action-btn" id="btnAddUser" title="Adicionar novo usuário"><i class="fas fa-user-plus text-2xl text-amber-400"></i><span>Novo usuário</span></button>
+                    <button class="action-btn" id="btnViewReports" title="Visualizar relatórios"><i class="fas fa-chart-line text-2xl text-orange-400"></i><span>Relatórios</span></button>
                 </div>
-                <i class="fas fa-exchange-alt text-2xl opacity-70"></i>
-              </div>
             </div>
-            <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 300ms;">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-sm opacity-80">Usuários</p>
-                  <p class="text-2xl font-bold" id="dashboardUsers">0</p>
-                </div>
-                <i class="fas fa-users text-2xl opacity-70"></i>
-              </div>
-            </div>
-            <div class="glass-effect rounded-xl p-6 text-white card-hover animated-item" style="animation-delay: 400ms;">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-sm opacity-80">Atrasados</p>
-                  <p class="text-2xl font-bold" id="dashboardOverdue">0</p>
-                </div>
-                <i class="fas fa-hourglass-half text-2xl opacity-70"></i>
-              </div>
-            </div>
-          </div>
-          <div id="quickActionsBlock" class="glass-effect rounded-2xl p-6 mt-6 animated-item" style="animation-delay: 500ms;">
-              <h2 class="text-xl font-semibold mb-6">Acessos rápidos</h2>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                  <button class="action-btn" id="btnAddItem" title="Adicionar novo livro ao acervo"><i class="fas fa-plus-circle text-2xl text-emerald-400"></i><span>Adicionar</span></button>
-                  <button class="action-btn" id="btnAddLoan" title="Registrar novo empréstimo"><i class="fas fa-hand-holding-usd text-2xl text-emerald-400"></i><span>Empréstimos</span></button>
-                  <button class="action-btn" id="btnNewSchedule" title="Agendar um equipamento"><i class="fas fa-calendar-plus text-2xl text-blue-400"></i><span>Agendar</span></button>
-                  <button class="action-btn" id="btnAddUser" title="Adicionar novo usuário"><i class="fas fa-user-plus text-2xl text-amber-400"></i><span>Novo usuário</span></button>
-                  <button class="action-btn" id="btnViewReports" title="Visualizar relatórios"><i class="fas fa-chart-line text-2xl text-orange-400"></i><span>Relatórios</span></button>
-              </div>
-          </div>
         </section>
   
         <section id="acervo" class="tab-content hidden opacity-0">
@@ -476,7 +519,7 @@
         </section>
 
         <section id="perfil" class="tab-content hidden opacity-0">
-          </section>
+        </section>
   
         <section id="meus-emprestimos" class="tab-content hidden opacity-0">
         </section>
@@ -505,16 +548,21 @@
           <h2 class="text-2xl font-semibold mb-4">Empréstimos ativos</h2>
           <div id="loanList" class="space-y-4"></div>
         </section>
+        
+        <section id="solicitacoes" class="tab-content hidden opacity-0">
+            <h2 class="text-2xl font-semibold mb-4">Solicitações de cadastro</h2>
+            <div id="registrationRequestsList" class="space-y-4"></div>
+        </section>
   
         <section id="usuarios" class="tab-content hidden opacity-0">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h2 class="text-2xl font-semibold">Gestão de Usuários</h2>
+                <h2 class="text-2xl font-semibold">Gestão de usuários</h2>
                 <div class="relative w-full md:w-auto md:max-w-sm">
                     <input type="text" id="userSearchInput" placeholder="Buscar usuário por nome..." class="form-input pl-10">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none"></i>
                 </div>
             </div>
-            <div id="userList" class="space-y-4"></div>
+            <div id="userList" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"></div>
         </section>
   
         <section id="relatorios" class="tab-content hidden opacity-0">
@@ -545,36 +593,6 @@
                 </div>
             </div>
         </section>
-  
-        <section id="configuracoes" class="tab-content hidden opacity-0">
-          <h2 class="text-2xl font-semibold mb-4">Configurações do Sistema</h2>
-            <div class="glass-effect rounded-2xl p-6 space-y-6">
-              <div>
-                 <h3 class="text-xl font-semibold mb-4">Funcionalidades Extras</h3>
-                 <div class="space-y-4">
-                     <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg">
-                         <label for="rfidToggle" class="font-medium text-white">Habilitar Suporte a RFID</label>
-                         <input type="checkbox" id="rfidToggle" class="form-checkbox h-5 w-5 text-emerald-500 rounded focus:ring-emerald-400 bg-slate-700 border-slate-600" checked>
-                     </div>
-                     <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg">
-                         <label for="moodleToggle" class="font-medium text-white">Integração com Moodle</label>
-                         <input type="checkbox" id="moodleToggle" class="form-checkbox h-5 w-5 text-emerald-500 rounded focus:ring-emerald-400 bg-slate-700 border-slate-600">
-                     </div>
-                      <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg">
-                          <label for="recommendationToggle" class="font-medium text-white">Recomendações Personalizadas</label>
-                          <input type="checkbox" id="recommendationToggle" class="form-checkbox h-5 w-5 text-emerald-500 rounded focus:ring-emerald-400 bg-slate-700 border-slate-600" checked>
-                      </div>
-                 </div>
-              </div>
-              <div>
-                 <h3 class="text-xl font-semibold mb-4">Backup e Restauração</h3>
-                 <div class="flex space-x-4">
-                    <button class="btn-primary text-white font-bold py-2 px-4 rounded-lg"><i class="fas fa-download mr-2"></i>Fazer Backup</button>
-                    <button class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg"><i class="fas fa-upload mr-2"></i>Restaurar Dados</button>
-                 </div>
-              </div>
-            </div>
-        </section>
       </main>
   </div>
   
@@ -591,14 +609,14 @@
   <div id="registerModal" class="modal fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
       <div class="modal-container bg-gray-900 border border-gray-700 text-gray-200 rounded-2xl max-w-lg w-full relative shadow-2xl flex flex-col">
           <header class="p-6 border-b border-gray-700 flex justify-between items-center">
-              <h3 class="text-xl font-semibold text-white">Criar Nova Conta</h3>
+              <h3 class="text-xl font-semibold text-white">Cadastrar</h3>
               <button id="registerModalClose" class="text-gray-400 hover:text-white" aria-label="Fechar modal"><i class="fas fa-times text-xl"></i></button>
           </header>
           <div class="p-6 overflow-y-auto modal-body" style="max-height: 70vh;">
               <form id="registerForm" class="space-y-4">
                   <div class="flex justify-center space-x-6 mb-6">
                       <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="radio" name="userType" value="Leitor(a)" class="form-radio h-4 w-4 text-emerald-500" checked>
+                          <input type="radio" name="userType" value="Aluno(a)" class="form-radio h-4 w-4 text-emerald-500" checked>
                           <span class="text-white font-medium">Sou aluno(a)</span>
                       </label>
                       <label class="flex items-center space-x-2 cursor-pointer">
@@ -610,7 +628,7 @@
                   <input type="text" id="registerName" placeholder="Nome completo" class="form-input" required>
                   <input type="email" id="registerEmail" placeholder="E-mail" class="form-input" required>
                   <input type="tel" id="registerPhone" placeholder="Número para contato (ex.: 85912345678)" class="form-input" required>
-                  <input type="password" id="registerPassword" placeholder="Crie uma Senha" class="form-input" required>
+                  <input type="password" id="registerPassword" placeholder="Crie uma Senha (mínimo 6 caracteres)" class="form-input" required>
   
                   <div id="leitorFields">
                       <label for="registerClassGrade" class="block mb-1 text-sm font-medium">Sua Turma/Série</label>
@@ -622,7 +640,7 @@
                   </div>
   
                   <p id="registerError" class="text-red-400 text-sm text-center hidden"></p>
-                  <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Finalizar Cadastro</button>
+                  <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">Solicitar Cadastro</button>
               </form>
           </div>
       </div>
@@ -632,7 +650,7 @@
       // --- FIREBASE SDK IMPORTS ---
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import { getFirestore, collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc, updateDoc, query, where, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-      import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
       
       // --- FIREBASE CONFIGURATION ---
       const firebaseConfig = {
@@ -653,7 +671,7 @@
       let currentUser = null;
       let reportDataCache = {};
       let currentCalendarDate = new Date();
-      let allItems = [], allCopies = [], allUsers = [], allLoans = [], allReservations = [], allNotifications = [], allEquipmentReservations = [], allActivities = [], allAssessments = [];
+      let allItems = [], allCopies = [], allUsers = [], allLoans = [], allReservations = [], allNotifications = [], allEquipmentReservations = [], allActivities = [], allAssessments = [], allRegistrationRequests = [];
       const classGradesList = [
           "1A", "1B", "1C", "1D",
           "2A", "2B", "2C", "2D",
@@ -669,7 +687,7 @@
   
       try {
           // 1. Consultas que são permitidas para todos os usuários logados
-          const [itemsSnap, copiesSnap, usersSnap, loansSnap, reservationsSnap, notificationsSnap, equipmentReservationsSnap] = await Promise.all([
+          const [itemsSnap, copiesSnap, usersSnap, loansSnap, reservationsSnap, notificationsSnap, equipmentReservationsSnap, registrationRequestsSnap] = await Promise.all([
               getDocs(collection(db, "items")),
               getDocs(collection(db, "copies")),
               getDocs(collection(db, "users")),
@@ -677,6 +695,7 @@
               getDocs(collection(db, "reservations")),
               getDocs(collection(db, "notifications")),
               getDocs(collection(db, "equipmentReservations")),
+              getDocs(collection(db, "registrationRequests")),
           ]);
   
           // Mapeia os resultados das consultas gerais
@@ -687,6 +706,7 @@
           allReservations = reservationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           allNotifications = notificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           allEquipmentReservations = equipmentReservationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          allRegistrationRequests = registrationRequestsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   
           // 2. Consultas condicionais para Atividades e Avaliações, baseadas no perfil do usuário
           let activitiesQuery, assessmentsQuery;
@@ -699,7 +719,7 @@
               assessmentsQuery = query(assessmentsRef);
           } 
           // Se for Leitor, aplica o filtro por turma.
-          else if (currentUser.role === 'Leitor(a)' && currentUser.classGrade) {
+          else if (currentUser.role === 'Aluno(a)' && currentUser.classGrade) {
               activitiesQuery = query(activitiesRef, where("classGrades", "array-contains", currentUser.classGrade));
               assessmentsQuery = query(assessmentsRef, where("classGrades", "array-contains", currentUser.classGrade));
           } 
@@ -726,7 +746,7 @@
           console.error("Error fetching data from Firestore: ", error);
           alert("Erro ao carregar os dados do sistema. Verifique sua conexão e a configuração do Firebase.");
       }
-  }
+    }
   
       // --- AUTHENTICATION & SESSION ---
       onAuthStateChanged(auth, async (user) => {
@@ -770,6 +790,20 @@
       async function handleLogout() {
           await signOut(auth);
           location.reload();
+      }
+
+      async function handleForgotPassword(e) {
+        e.preventDefault();
+        const email = prompt("Por favor, digite o seu e-mail para enviarmos o link de redefinição de senha:");
+        if (email) {
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Link de redefinição de senha enviado para o seu e-mail. Verifique sua caixa de entrada e spam.");
+            } catch (error) {
+                console.error("Error sending password reset email:", error);
+                alert("Não foi possível enviar o e-mail. Verifique se o e-mail digitado está correto e tente novamente.");
+            }
+        }
       }
   
       async function initAppUI() {
@@ -816,7 +850,7 @@
               viewReports: document.getElementById('btnViewReports')
           };
           
-          const allSections = ['dashboard', 'perfil', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes', 'agendamentos', 'calendario', 'meus-emprestimos', 'atividades', 'avaliacoes'];
+          const allSections = ['dashboard', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'agendamentos', 'calendario', 'meus-emprestimos', 'atividades', 'avaliacoes', 'solicitacoes'];
           let allowedSections = [];
           
           Object.values(quickActions).forEach(btn => btn.style.display = 'none');
@@ -829,20 +863,20 @@
                   quickActionsBlock.style.display = 'block';
                   break;
               case 'Bibliotecário':
-                  allowedSections = ['dashboard', 'perfil', 'acervo', 'agendamentos', 'calendario', 'emprestimos', 'usuarios', 'relatorios'];
+                  allowedSections = ['dashboard', 'acervo', 'agendamentos', 'calendario', 'emprestimos', 'usuarios', 'relatorios', 'solicitacoes'];
                   quickActions.addLoan.style.display = 'flex';
                   quickActions.newSchedule.style.display = 'flex';
                   quickActions.viewReports.style.display = 'flex';
                   quickActionsBlock.style.display = 'block';
                   break;
               case 'Professor(a)':
-                  allowedSections = ['dashboard', 'perfil', 'acervo', 'relatorios', 'agendamentos', 'calendario', 'atividades', 'avaliacoes'];
+                  allowedSections = ['dashboard', 'acervo', 'relatorios', 'agendamentos', 'calendario', 'atividades', 'avaliacoes'];
                   quickActions.newSchedule.style.display = 'flex';
                   quickActions.viewReports.style.display = 'flex';
                   quickActionsBlock.style.display = 'block';
                   break;
-              case 'Leitor(a)':
-                  allowedSections = ['perfil', 'acervo', 'meus-emprestimos', 'atividades', 'avaliacoes'];
+              case 'Aluno(a)':
+                  allowedSections = ['acervo', 'meus-emprestimos', 'atividades', 'avaliacoes'];
                   break;
           }
   
@@ -883,6 +917,15 @@
         } else {
             agendamentosIndicator.style.display = 'none';
         }
+
+        const solicitacoesIndicator = document.getElementById('solicitacoesIndicator');
+        const pendingRegistrations = allRegistrationRequests.filter(r => r.status === 'Pendente');
+        if (pendingRegistrations.length > 0 && (currentUser.role === 'Admin' || currentUser.role === 'Bibliotecário')) {
+            solicitacoesIndicator.textContent = pendingRegistrations.length;
+            solicitacoesIndicator.style.display = 'inline-block';
+        } else {
+            solicitacoesIndicator.style.display = 'none';
+        }
       }
   
       function populateClassificationFilter() {
@@ -904,8 +947,8 @@
   
           const filteredItems = allItems.filter(item => {
               const searchMatch = item.title.toLowerCase().includes(lowercasedFilter) ||
-                                           item.author.toLowerCase().includes(lowercasedFilter) ||
-                                           (item.isbn_issn && item.isbn_issn.toLowerCase().includes(lowercasedFilter));
+                                  item.author.toLowerCase().includes(lowercasedFilter) ||
+                                  (item.isbn_issn && item.isbn_issn.toLowerCase().includes(lowercasedFilter));
               const classificationMatch = classificationFilter ? item.classification === classificationFilter : true;
               return searchMatch && classificationMatch;
           });
@@ -954,7 +997,7 @@
 
           const roleStyles = { 
               'Admin': 'bg-amber-500/30 text-amber-300', 
-              'Leitor(a)': 'bg-emerald-500/30 text-emerald-300',
+              'Aluno(a)': 'bg-emerald-500/30 text-emerald-300',
               'Professor(a)': 'bg-blue-500/30 text-blue-300',
               'Bibliotecário': 'bg-indigo-500/30 text-indigo-300'
           };
@@ -995,31 +1038,31 @@
                           <h2 class="text-3xl font-bold text-white">${user.name}</h2>
                           <p class="text-lg text-gray-300 flex items-center gap-4">
                               <span class="badge ${roleStyles[user.role] || ''}">${user.role}</span>
-                              ${user.role === 'Leitor(a)' && user.classGrade ? `<span><i class="fas fa-chalkboard-teacher mr-2"></i>Turma ${user.classGrade}</span>` : ''}
+                              ${user.role === 'Aluno(a)' && user.classGrade ? `<span><i class="fas fa-chalkboard-teacher mr-2"></i>Turma ${user.classGrade}</span>` : ''}
                           </p>
                       </div>
                   </div>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div class="glass-effect rounded-2xl p-6 animated-item" style="animation-delay: 100ms;">
-                          <p class="text-sm opacity-80">Total de Livros Emprestados</p>
+                          <p class="text-sm opacity-80">Total de empréstimos</p>
                           <p class="text-4xl font-bold text-white mt-2">${userLoans.length}</p>
                       </div>
                       <div class="glass-effect rounded-2xl p-6 animated-item" style="animation-delay: 200ms;">
-                          <p class="text-sm opacity-80">Empréstimos Ativos</p>
+                          <p class="text-sm opacity-80">Empréstimos ativos</p>
                           <p class="text-4xl font-bold text-white mt-2">${activeLoans.length}</p>
                       </div>
                   </div>
 
                   <div class="glass-effect rounded-2xl p-6 animated-item" style="animation-delay: 300ms;">
-                      <h3 class="text-xl font-semibold mb-4">Empréstimos Ativos</h3>
+                      <h3 class="text-xl font-semibold mb-4">Empréstimos ativos</h3>
                       <div class="space-y-3">
                           ${activeLoans.length > 0 ? activeLoans.map(loan => getLoanItemHTML(loan, false)).join('') : '<p>Nenhum empréstimo ativo no momento.</p>'}
                       </div>
                   </div>
 
                   <div class="glass-effect rounded-2xl p-6 animated-item" style="animation-delay: 400ms;">
-                      <h3 class="text-xl font-semibold mb-4">Histórico de Empréstimos</h3>
+                      <h3 class="text-xl font-semibold mb-4">Histórico de empréstimos</h3>
                       <div class="space-y-3">
                          ${historyLoans.length > 0 ? historyLoans.map(loan => getLoanItemHTML(loan, true)).join('') : '<p>Nenhum livro no histórico ainda.</p>'}
                       </div>
@@ -1034,7 +1077,7 @@
           container.innerHTML = `<h2 class="text-2xl font-semibold mb-4">Meus Empréstimos</h2>`;
   
           const myLoans = allLoans.filter(loan => loan.userId === currentUser.uid)
-              .sort((a, b) => new Date(b.loanDate) - new Date(a.loanDate));
+            .sort((a, b) => new Date(b.loanDate) - new Date(a.loanDate));
   
           if (myLoans.length === 0) {
               container.innerHTML += `<p class="text-center glass-effect rounded-xl p-6">Você não possui nenhum empréstimo no seu histórico.</p>`;
@@ -1101,7 +1144,7 @@
                   </div>
                   <div class="flex items-center gap-4 w-full md:w-auto">
                       <select id="assessmentDisciplineFilter" class="form-select flex-grow">
-                          <option value="">Todas as Disciplinas</option>
+                          <option value="">Todas as disciplinas</option>
                           ${disciplines.map(d => `<option value="${d}">${d}</option>`).join('')}
                       </select>
           `;
@@ -1123,7 +1166,7 @@
           const listContainer = document.getElementById('assessmentList');
           let filteredAssessments = allAssessments;
   
-          if (currentUser.role === 'Leitor(a)') {
+          if (currentUser.role === 'Aluno(a)') {
               filteredAssessments = allAssessments.filter(a => a.classGrades && a.classGrades.includes(currentUser.classGrade));
           }
   
@@ -1143,14 +1186,14 @@
               let actionButtons = '';
               if (currentUser.role === 'Admin' || currentUser.uid === assessment.professorUid) {
                   actionButtons = `
-                    <div class="mt-4 pt-4 border-t border-gray-700/50 flex items-center justify-end gap-4">
-                        <button class="text-sm font-semibold text-emerald-400 hover:text-emerald-300" onclick="showAddOrEditAssessmentModal('${assessment.id}')">
-                            <i class="fas fa-edit mr-1"></i> Editar
-                        </button>
-                        <button class="text-sm font-semibold text-red-400 hover:text-red-300" onclick="deleteAssessment('${assessment.id}')">
-                            <i class="fas fa-trash-alt mr-1"></i> Remover
-                        </button>
-                    </div>
+                      <div class="mt-4 pt-4 border-t border-gray-700/50 flex items-center justify-end gap-4">
+                          <button class="text-sm font-semibold text-emerald-400 hover:text-emerald-300" onclick="showAddOrEditAssessmentModal('${assessment.id}')">
+                              <i class="fas fa-edit mr-1"></i> Editar
+                          </button>
+                          <button class="text-sm font-semibold text-red-400 hover:text-red-300" onclick="deleteAssessment('${assessment.id}')">
+                              <i class="fas fa-trash-alt mr-1"></i> Remover
+                          </button>
+                      </div>
                   `;
               }
 
@@ -1188,7 +1231,7 @@
                   </div>
                   <div class="flex items-center gap-4 w-full md:w-auto">
                       <select id="activityDisciplineFilter" class="form-select flex-grow">
-                          <option value="">Todas as Disciplinas</option>
+                          <option value="">Todas as disciplinas</option>
                           ${disciplines.map(d => `<option value="${d}">${d}</option>`).join('')}
                       </select>
           `;
@@ -1210,7 +1253,7 @@
           const listContainer = document.getElementById('activityList');
           let filteredActivities = allActivities;
   
-          if (currentUser.role === 'Leitor(a)') {
+          if (currentUser.role === 'Aluno(a)') {
               filteredActivities = allActivities.filter(a => a.classGrades && a.classGrades.includes(currentUser.classGrade));
           }
           
@@ -1234,24 +1277,24 @@
                                       <a href="${activity.link.startsWith('http') ? activity.link : 'https://' + activity.link}" target="_blank" class="inline-flex items-center justify-center w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg">
                                           <i class="fas fa-file-pdf mr-2"></i>Acessar PDF
                                       </a>
-                                  </div>`;
+                                    </div>`;
               } else if (activity.type === 'Livro') {
-                   contentDetails = `<div class="mt-4 pt-4 border-t border-gray-700/50 text-sm">
+                 contentDetails = `<div class="mt-4 pt-4 border-t border-gray-700/50 text-sm">
                                       <p><strong>Página(s):</strong> ${activity.pages || 'N/A'}</p>
                                       <p><strong>Questão(ões):</strong> ${activity.questions || 'N/A'}</p>
-                                  </div>`;
+                                    </div>`;
               }
               
               if (currentUser.role === 'Admin' || currentUser.uid === activity.professorUid) {
                   actionButtons = `
-                    <div class="mt-4 pt-4 border-t border-gray-700/50 flex items-center justify-end gap-4">
-                        <button class="text-sm font-semibold text-emerald-400 hover:text-emerald-300" onclick="showAddOrEditActivityModal('${activity.id}')">
-                            <i class="fas fa-edit mr-1"></i> Editar
-                        </button>
-                        <button class="text-sm font-semibold text-red-400 hover:text-red-300" onclick="deleteActivity('${activity.id}')">
-                            <i class="fas fa-trash-alt mr-1"></i> Remover
-                        </button>
-                    </div>
+                      <div class="mt-4 pt-4 border-t border-gray-700/50 flex items-center justify-end gap-4">
+                          <button class="text-sm font-semibold text-emerald-400 hover:text-emerald-300" onclick="showAddOrEditActivityModal('${activity.id}')">
+                              <i class="fas fa-edit mr-1"></i> Editar
+                          </button>
+                          <button class="text-sm font-semibold text-red-400 hover:text-red-300" onclick="deleteActivity('${activity.id}')">
+                              <i class="fas fa-trash-alt mr-1"></i> Remover
+                          </button>
+                      </div>
                   `;
                   // Se tivermos botões de ação e detalhes, unificamos a borda
                   if(contentDetails !== '') {
@@ -1350,6 +1393,37 @@
             container.innerHTML += card;
         });
       }
+
+      function renderSolicitacoes() {
+        const container = document.getElementById("registrationRequestsList");
+        container.innerHTML = "";
+        const pendingRequests = allRegistrationRequests.filter(r => r.status === 'Pendente');
+
+        if (pendingRequests.length === 0) {
+            container.innerHTML = `<p class="text-center glass-effect rounded-xl p-6">Nenhuma solicitação de cadastro pendente.</p>`;
+            return;
+        }
+
+        pendingRequests.forEach((req, index) => {
+            const reqDate = req.requestTimestamp?.toDate ? req.requestTimestamp.toDate() : new Date();
+            const card = `
+                <div class="glass-effect rounded-xl p-4 border-l-4 border-amber-500 animated-item" style="animation-delay: ${index * 50}ms">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center">
+                        <div>
+                            <p class="font-bold text-white">${req.name}</p>
+                            <p class="text-sm">${req.email} | <span class="font-semibold">${req.role}</span></p>
+                            <p class="text-xs text-gray-400">Solicitado em: ${reqDate.toLocaleDateString('pt-BR')}</p>
+                        </div>
+                        <div class="flex space-x-2 mt-4 md:mt-0">
+                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg" title="Recusar" onclick="denyRegistrationRequest('${req.id}')"><i class="fas fa-times"></i> Recusar</button>
+                            <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg" title="Aprovar" onclick="showApproveRegistrationModal('${req.id}')"><i class="fas fa-check"></i> Aprovar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += card;
+        });
+      }
   
       function renderUsers(filter = "") {
         const container = document.getElementById("userList");
@@ -1359,13 +1433,13 @@
         const filteredUsers = allUsers.filter(user => user.name.toLowerCase().includes(lowercasedFilter));
   
         if(filteredUsers.length === 0) {
-            container.innerHTML = `<p class="text-center">Nenhum usuário encontrado.</p>`; return;
+            container.innerHTML = `<p class="text-center col-span-1 lg:col-span-2 xl:col-span-3">Nenhum usuário encontrado.</p>`; return;
         }
   
         filteredUsers.forEach((user, index) => {
             const roleStyles = { 
                 'Admin': 'bg-amber-500/30 text-amber-300', 
-                'Leitor(a)': 'bg-emerald-500/30 text-emerald-300',
+                'Aluno(a)': 'bg-emerald-500/30 text-emerald-300',
                 'Professor(a)': 'bg-blue-500/30 text-blue-300',
                 'Bibliotecário': 'bg-indigo-500/30 text-indigo-300'
             };
@@ -1373,23 +1447,23 @@
             let adminButtons = '';
             if (currentUser.role === 'Admin' && currentUser.uid !== user.id) { 
                 adminButtons = `
-                  <div class="flex items-center space-x-3">
+                  <div class="flex items-center space-x-3 mt-3 md:mt-0">
                       <button class="text-sm text-emerald-400 hover:text-emerald-300 font-semibold" onclick="event.stopPropagation(); showEditUserModal('${user.id}')">Editar</button>
                       <button class="text-sm text-red-400 hover:text-red-300 font-semibold" onclick="event.stopPropagation(); removeUser('${user.id}')">Remover</button>
                   </div>`;
             }
             
-            const userInfo = user.role === 'Leitor(a)' && user.classGrade ? `Turma ${user.classGrade}` : (user.role === 'Professor(a)' ? 'Professor(a)' : user.email);
+            const userInfo = user.role === 'Aluno(a)' && user.classGrade ? `Turma ${user.classGrade}` : (user.role === 'Professor(a)' ? 'Professor(a)' : user.email);
   
             const card = `
-                <div class="glass-effect rounded-xl p-4 flex items-center justify-between cursor-pointer card-hover animated-item" style="animation-delay: ${index * 50}ms" onclick="showUserProfile('${user.id}')">
-                    <div class="flex items-center gap-4">
+                <div class="glass-effect rounded-xl p-4 flex flex-col md:flex-row items-center justify-between cursor-pointer card-hover animated-item" style="animation-delay: ${index * 50}ms" onclick="showUserProfile('${user.id}')">
+                    <div class="flex items-center gap-4 w-full min-w-0">
                         <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center font-bold text-emerald-400 flex-shrink-0">
-                          ${user.name.charAt(0)}
+                            ${user.name.charAt(0)}
                         </div>
-                        <div>
-                            <p class="font-bold text-white">${user.name} <span class="badge ${roleStyles[user.role] || 'bg-gray-500/30 text-gray-300'}">${user.role}</span></p>
-                            <p class="text-sm">${userInfo}</p>
+                        <div class="flex-grow min-w-0">
+                            <p class="font-bold text-white truncate">${user.name} <span class="badge ${roleStyles[user.role] || 'bg-gray-500/30 text-gray-300'}">${user.role}</span></p>
+                            <p class="text-sm truncate">${userInfo}</p>
                         </div>
                     </div>
                     ${adminButtons}
@@ -1442,7 +1516,7 @@
           const sortedItems = Object.entries(itemLoanCounts)
               .map(([itemId, count]) => {
                   const item = allItems.find(i => i.id == itemId);
-                  return { title: item ? item.title : "Item Removido", count };
+                  return { title: item ? item.title : "Item removido", count };
               })
               .sort((a, b) => b.count - a.count);
   
@@ -1469,14 +1543,14 @@
           const sortedReaders = Object.entries(readerLoanCounts)
               .map(([userId, count]) => {
                   const user = allUsers.find(u => u.id == userId);
-                  return { name: user ? user.name : "Usuário Removido", count };
+                  return { name: user ? user.name : "Usuário removido", count };
               })
               .sort((a, b) => b.count - a.count);
               
           // 4. Most Active Classes
           const classLoanCounts = allLoans.reduce((acc, loan) => {
               const user = allUsers.find(u => u.id === loan.userId);
-              if (user && user.role === 'Leitor(a)' && user.classGrade) {
+              if (user && user.role === 'Aluno(a)' && user.classGrade) {
                   acc[user.classGrade] = (acc[user.classGrade] || 0) + 1;
               }
               return acc;
@@ -1666,9 +1740,9 @@
   
               let indicatorsHtml = '';
               if (reservationsForDay.length > 0) {
-                   indicatorsHtml = `<div class="reservation-indicators">
-                                        <span class="reservation-count-badge">${reservationsForDay.length} agendamento(s)</span>
-                                    </div>`;
+                     indicatorsHtml = `<div class="reservation-indicators">
+                                          <span class="reservation-count-badge">${reservationsForDay.length} agendamento(s)</span>
+                                        </div>`;
               }
   
               html += `
@@ -1791,11 +1865,11 @@
           if (currentUser.role === 'Admin') {
               actionButtons = `
                   <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end space-x-4">
-                      <button class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg" onclick="showEditItemModal('${itemId}')">Editar Item</button>
-                      <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg" onclick="deleteItem('${itemId}')">Excluir item</button>
+                      <button class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg" onclick="showEditItemModal('${itemId}')">Editar</button>
+                      <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg" onclick="deleteItem('${itemId}')">Excluir</button>
                   </div>
               `;
-          } else if (currentUser.role === 'Leitor(a)') {
+          } else if (currentUser.role === 'Aluno(a)') {
               const hasAvailable = copies.some(c => c.status === 'Disponível');
               if (hasAvailable) {
                   actionButtons = `
@@ -1962,14 +2036,14 @@
                    <input type="password" id="userPassword" placeholder="Senha inicial" class="form-input" required>
                    <input type="tel" id="userPhone" placeholder="Telefone (ex.: 85912345678)" class="form-input" required>
                    <select id="userRole" class="form-select">
-                       <option value="Leitor(a)">Leitor(a)</option>
+                       <option value="Aluno(a)">Aluno(a)</option>
                        <option value="Professor(a)">Professor(a)</option>
                        <option value="Bibliotecário">Bibliotecário</option>
                        <option value="Admin">Admin</option>
                    </select>
                    <div id="classGradeContainer">
-                      <label for="userClassGrade" class="block mb-1 text-sm">Turma/Série</label>
-                      <select id="userClassGrade" class="form-select"></select>
+                     <label for="userClassGrade" class="block mb-1 text-sm">Turma/Série</label>
+                     <select id="userClassGrade" class="form-select"></select>
                    </div>
                    <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Adicionar usuário</button>
                </form>`;
@@ -1980,7 +2054,7 @@
           populateClassGradeSelect('userClassGrade');
   
           roleSelect.onchange = () => {
-              classGradeContainer.style.display = roleSelect.value === 'Leitor(a)' ? 'block' : 'none';
+              classGradeContainer.style.display = roleSelect.value === 'Aluno(a)' ? 'block' : 'none';
           };
   
           document.getElementById("addUserForm").onsubmit = async (e) => {
@@ -1988,7 +2062,7 @@
               alert("A criação de usuários com senha deve ser feita pelo painel do Firebase Authentication por segurança. Esta função criará apenas o perfil no banco de dados.");
               
               const role = document.getElementById("userRole").value;
-              const classGrade = role === 'Leitor(a)' ? document.getElementById("userClassGrade").value : null;
+              const classGrade = role === 'Aluno(a)' ? document.getElementById("userClassGrade").value : null;
               const newUserData = { 
                   name: document.getElementById("userName").value, 
                   phone: document.getElementById("userPhone").value, 
@@ -2059,7 +2133,7 @@
                       <label class="block mb-2 text-sm font-medium">Turmas</label>
                       ${generateCollapsibleClassSelectorHTML(assessment.classGrades)}
                   </div>
-                  <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">${isEditing ? 'Salvar Alterações' : 'Adicionar Avaliação'}</button>
+                  <button type="submit" class="w-full btn-primary text-white font-bold py-3 px-4 rounded-lg">${isEditing ? 'Salvar' : 'Adicionar'}</button>
               </form>
           `;
           showModal(isEditing ? "Editar avaliação" : "Adicionar nova avaliação", content);
@@ -2436,14 +2510,14 @@
                   <label>Nome</label><input type="text" id="editUserName" class="form-input" value="${user.name}" required>
                   <label>Telefone</label><input type="tel" id="editUserPhone" class="form-input" value="${user.phone}" required>
                   <label>Perfil</label><select id="editUserRole" class="form-select">
-                      <option value="Leitor(a)" ${user.role === 'Leitor(a)' ? 'selected' : ''}>Leitor(a)</option>
+                      <option value="Aluno(a)" ${user.role === 'Aluno(a)' ? 'selected' : ''}>Aluno(a)</option>
                       <option value="Professor(a)" ${user.role === 'Professor(a)' ? 'selected' : ''}>Professor(a)</option>
                       <option value="Bibliotecário" ${user.role === 'Bibliotecário' ? 'selected' : ''}>Bibliotecário</option>
                       <option value="Admin" ${user.role === 'Admin' ? 'selected' : ''}>Admin</option>
                   </select>
-                  <div id="editClassGradeContainer" style="display: ${user.role === 'Leitor(a)' ? 'block' : 'none'}">
-                      <label for="editUserClassGrade" class="block mb-1 text-sm">Turma/Série</label>
-                      <select id="editUserClassGrade" class="form-select"></select>
+                  <div id="editClassGradeContainer" style="display: ${user.role === 'Aluno(a)' ? 'block' : 'none'}">
+                    <label for="editUserClassGrade" class="block mb-1 text-sm">Turma/Série</label>
+                    <select id="editUserClassGrade" class="form-select"></select>
                   </div>
                   <div class="pt-4 mt-2 border-t border-gray-700">
                       <p class="text-sm text-amber-300 mb-2">Deixe os campos de senha em branco para não alterá-la.</p>
@@ -2459,14 +2533,14 @@
           const roleSelect = document.getElementById("editUserRole");
           const classGradeContainer = document.getElementById("editClassGradeContainer");
           roleSelect.onchange = () => {
-              classGradeContainer.style.display = roleSelect.value === 'Leitor(a)' ? 'block' : 'none';
+              classGradeContainer.style.display = roleSelect.value === 'Aluno(a)' ? 'block' : 'none';
           };
           
           document.getElementById('editUserForm').onsubmit = async (e) => {
               e.preventDefault();
               const password = document.getElementById('editUserPassword').value;
               const passwordConfirm = document.getElementById('editUserPasswordConfirm').value;
-      
+  
               if (password && password !== passwordConfirm) {
                   alert('As senhas não coincidem.');
                   return;
@@ -2481,7 +2555,7 @@
                   name: document.getElementById('editUserName').value,
                   phone: document.getElementById('editUserPhone').value,
                   role: role,
-                  classGrade: role === 'Leitor(a)' ? document.getElementById('editUserClassGrade').value : null
+                  classGrade: role === 'Aluno(a)' ? document.getElementById('editUserClassGrade').value : null
               };
   
               try {
@@ -2668,8 +2742,7 @@
                       <textarea id="editReservationReason" rows="3" class="form-input" required>${reservation.reason}</textarea>
                   </div>
                   <div class="flex justify-between">
-                      <button type="button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg" onclick="deleteReservation('${reservation.id}')">Remover</button>
-                      <button type="submit" class="btn-primary text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
+                      <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
                   </div>
               </form>
           `;
@@ -2718,13 +2791,25 @@
               return;
           }
 
-          const content = reservationsForDay.map(res => `
-              <div class="p-4 bg-gray-800/50 rounded-lg mb-3">
-                  <p class="font-bold text-white">${res.equipmentType}</p>
-                  <p class="text-sm">Solicitado por: <span class="font-semibold">${res.userName}</span></p>
-                  <p class="text-xs text-gray-400 mt-2"><b>Motivo:</b> ${res.reason}</p>
-              </div>
-          `).join('');
+          const content = reservationsForDay.map(res => {
+                  let actionButtons = '';
+                  if (currentUser.role === 'Admin' || currentUser.role === 'Bibliotecário') {
+                      actionButtons = `
+                          <div class="mt-3 pt-3 border-t border-gray-700/50 flex justify-end gap-3">
+                              <button class="text-sm font-semibold text-emerald-400 hover:text-emerald-300" onclick="showEditReservationModal('${res.id}')"><i class="fas fa-edit mr-1"></i> Editar</button>
+                              <button class="text-sm font-semibold text-red-400 hover:text-red-300" onclick="deleteReservation('${res.id}')"><i class="fas fa-trash-alt mr-1"></i> Remover</button>
+                          </div>
+                      `;
+                  }
+              return `
+                  <div class="p-4 bg-gray-800/50 rounded-lg mb-3">
+                      <p class="font-bold text-white">${res.equipmentType}</p>
+                      <p class="text-sm">Solicitado por: <span class="font-semibold">${res.userName}</span></p>
+                      <p class="text-xs text-gray-400 mt-2"><b>Motivo:</b> ${res.reason}</p>
+                      ${actionButtons}
+                  </div>
+              `;
+              }).join('');
 
           showModal(title, `<div class="space-y-3">${content}</div>`);
       };
@@ -2781,7 +2866,7 @@
   
       userTypeRadios.forEach(radio => {
           radio.addEventListener('change', (e) => {
-              if (e.target.value === 'Leitor(a)') {
+              if (e.target.value === 'Aluno(a)') {
                   leitorFields.classList.remove('hidden');
                   professorFields.classList.add('hidden');
               } else {
@@ -2792,54 +2877,144 @@
       });
   
       async function handleRegistration(e) {
-          e.preventDefault();
-          registerError.classList.add('hidden');
-  
-          const name = document.getElementById('registerName').value;
-          const email = document.getElementById('registerEmail').value;
-          const phone = document.getElementById('registerPhone').value;
-          const password = document.getElementById('registerPassword').value;
-          const role = document.querySelector('input[name="userType"]:checked').value;
-  
-        let userData = {
-          name,
-          email,
-          phone,
-          role
+        e.preventDefault();
+        registerError.classList.add('hidden');
+        
+        const submitButton = e.target.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+
+        const password = document.getElementById('registerPassword').value;
+        if (password.length < 6) {
+            registerError.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+            registerError.classList.remove('hidden');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Solicitar Cadastro';
+            return;
+        }
+
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const phone = document.getElementById('registerPhone').value;
+        const role = document.querySelector('input[name="userType"]:checked').value;
+
+        let requestData = {
+            name,
+            email,
+            phone,
+            password, // INSECURE: Storing plain text password. See security warning.
+            role,
+            status: 'Pendente',
+            requestTimestamp: serverTimestamp()
         };
-  
-          if (role === 'Leitor(a)') {
-              userData.classGrade = document.getElementById('registerClassGrade').value || null;
-               if (!userData.classGrade) {
-                   registerError.textContent = 'Por favor, selecione sua turma/série.';
-                   registerError.classList.remove('hidden');
-                   return;
-               }
-          } else {
-              userData.subject = document.getElementById('registerSubject').value || null;
+
+        if (role === 'Aluno(a)') {
+            requestData.classGrade = document.getElementById('registerClassGrade').value || null;
+            if (!requestData.classGrade) {
+                registerError.textContent = 'Por favor, selecione sua turma/série.';
+                registerError.classList.remove('hidden');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Solicitar Cadastro';
+                return;
+            }
+        } else {
+            requestData.subject = document.getElementById('registerSubject').value || null;
+        }
+
+        try {
+            await addDoc(collection(db, "registrationRequests"), requestData);
+            alert("Solicitação de cadastro enviada com sucesso! A administração irá revisar seus dados e criar sua conta. Você será notificado.");
+            closeRegisterModal();
+        } catch (error) {
+            console.error("Erro ao enviar solicitação de cadastro:", error);
+            registerError.textContent = 'Ocorreu um erro ao enviar sua solicitação. Tente novamente.';
+            registerError.classList.remove('hidden');
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Solicitar Cadastro';
+        }
+      }
+
+      window.showApproveRegistrationModal = (requestId) => {
+        const request = allRegistrationRequests.find(r => r.id === requestId);
+        if (!request) return;
+
+        const content = `
+            <form id="approveRegistrationForm" class="space-y-4">
+                <input type="hidden" id="approvalRequestId" value="${requestId}">
+                <p>Você confirma a criação da conta para <strong>${request.name}</strong> (${request.email})?</p>
+                <p class="text-sm text-gray-400">A conta será criada usando a senha que o próprio usuário definiu no cadastro.</p>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Criar Conta e Aprovar</button>
+            </form>
+        `;
+        showModal("Aprovar Cadastro", content);
+        document.getElementById('approveRegistrationForm').onsubmit = approveRegistrationRequest;
+      }
+
+      async function approveRegistrationRequest(e) {
+          e.preventDefault();
+          const requestId = document.getElementById('approvalRequestId').value;
+          const request = allRegistrationRequests.find(r => r.id === requestId);
+
+          if (!request || !request.password) {
+              alert('Solicitação inválida ou senha não encontrada. Não é possível aprovar.');
+              return;
           }
-  
+
+          const submitButton = e.target.querySelector('button[type="submit"]');
+          submitButton.disabled = true;
+          submitButton.textContent = 'Aprovando...';
+
           try {
-              const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+              // Use the email and the stored password from the request
+              const userCredential = await createUserWithEmailAndPassword(auth, request.email, request.password);
               const user = userCredential.user;
-  
+
+              const userData = {
+                  name: request.name,
+                  phone: request.phone,
+                  role: request.role,
+                  classGrade: request.classGrade || null,
+                  subject: request.subject || null,
+              };
               await setDoc(doc(db, "users", user.uid), userData);
-  
-              alert("Cadastro realizado com sucesso! Você já pode fazer o login.");
-              closeRegisterModal();
-  
+              await deleteDoc(doc(db, "registrationRequests", requestId));
+
+              alert(`Usuário ${request.name} criado com sucesso!`);
+              closeModal();
+              await fetchAllData();
+              updateAll();
+
           } catch (error) {
-              console.error("Erro no cadastro:", error);
+              console.error("Erro ao aprovar cadastro:", error);
               if (error.code === 'auth/email-already-in-use') {
-                  registerError.textContent = 'Este e-mail já está em uso.';
-              } else if (error.code === 'auth/weak-password') {
-                  registerError.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+                  alert('Erro: Este e-mail já está cadastrado no sistema. A solicitação será removida.');
+                  await deleteDoc(doc(db, "registrationRequests", requestId));
+                  closeModal();
+                  await fetchAllData();
+                  updateAll();
               } else {
-                  registerError.textContent = 'Ocorreu um erro. Verifique os dados e tente novamente.';
+                  alert('Ocorreu um erro ao criar o usuário: ' + error.message);
               }
-              registerError.classList.remove('hidden');
+          } finally {
+              submitButton.disabled = false;
+              submitButton.textContent = 'Criar conta e aprovar';
           }
       }
+
+      window.denyRegistrationRequest = async (requestId) => {
+          if (!confirm('Tem certeza que deseja recusar esta solicitação de cadastro? A solicitação será removida permanentemente.')) return;
+
+          try {
+              await deleteDoc(doc(db, "registrationRequests", requestId));
+              alert('Solicitação de cadastro recusada e removida.');
+              await fetchAllData();
+              updateAll();
+          } catch (error) {
+              console.error("Erro ao recusar solicitação:", error);
+              alert('Ocorreu um erro ao remover a solicitação.');
+          }
+      };
       
       function showAddScheduleModal() {
           const content = `
@@ -2932,8 +3107,93 @@
           renderProfile(userId);
           switchTab('perfil');
       }
+
+      function showChangePasswordModal() {
+        const content = `
+            <form id="changePasswordForm" class="space-y-4">
+                <div>
+                    <label for="currentPassword" class="block mb-1 text-sm font-medium">Senha Atual</label>
+                    <input type="password" id="currentPassword" class="form-input" placeholder="••••••••" required>
+                </div>
+                <div>
+                    <label for="newPassword" class="block mb-1 text-sm font-medium">Nova senha</label>
+                    <input type="password" id="newPassword" class="form-input" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                <div>
+                    <label for="confirmNewPassword" class="block mb-1 text-sm font-medium">Confirme a nova senha</label>
+                    <input type="password" id="confirmNewPassword" class="form-input" placeholder="Repita a nova senha" required>
+                </div>
+                <p id="changePasswordError" class="text-red-400 text-sm text-center hidden"></p>
+                <button type="submit" class="w-full btn-primary text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
+            </form>
+        `;
+        showModal("Alterar senha", content);
+        document.getElementById('changePasswordForm').onsubmit = handleChangePassword;
+    }
+
+    async function handleChangePassword(e) {
+        e.preventDefault();
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+        const errorP = document.getElementById('changePasswordError');
+        errorP.classList.add('hidden');
+
+        if (newPassword.length < 6) {
+            errorP.textContent = 'A nova senha deve ter no mínimo 6 caracteres.';
+            errorP.classList.remove('hidden');
+            return;
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            errorP.textContent = 'As novas senhas não coincidem.';
+            errorP.classList.remove('hidden');
+            return;
+        }
+
+        const user = auth.currentUser;
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
+
+        try {
+            await reauthenticateWithCredential(user, credential);
+            await updatePassword(user, newPassword);
+            alert("Senha alterada com sucesso!");
+            closeModal();
+        } catch (error) {
+            console.error("Password change error:", error);
+            if (error.code === 'auth/wrong-password') {
+                errorP.textContent = 'A senha atual está incorreta.';
+            } else {
+                errorP.textContent = 'Ocorreu um erro. Tente fazer login novamente.';
+            }
+            errorP.classList.remove('hidden');
+        }
+    }
   
       // --- GENERAL & EVENT LISTENERS ---
+      async function handleReload() {
+          const reloadBtn = document.getElementById('reloadBtn');
+          const icon = reloadBtn.querySelector('i');
+
+          // Adiciona a animação de rotação e desabilita o botão
+          icon.classList.add('fa-spin');
+          reloadBtn.disabled = true;
+
+          try {
+              await fetchAllData();
+              updateAll(); // Esta função já atualiza a aba atual
+          } catch (error) {
+              console.error("Erro durante a atualização manual:", error);
+              alert("Ocorreu um erro ao atualizar os dados.");
+          } finally {
+              // Remove a animação e reabilita o botão após um pequeno atraso
+              setTimeout(() => {
+                  icon.classList.remove('fa-spin');
+                  reloadBtn.disabled = false;
+              }, 500);
+          }
+      }
+
       function updateAll() {
         if (!currentUser) return;
         updateCounters();
@@ -2944,15 +3204,21 @@
       function switchTab(sectionId, changeHistory = true) {
         if (!currentUser) return;
         const allowedSectionsMap = {
-            'Admin': ['dashboard', 'perfil', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'configuracoes', 'agendamentos', 'calendario', 'atividades', 'avaliacoes'],
-            'Bibliotecário': ['dashboard', 'perfil', 'acervo', 'agendamentos', 'calendario', 'emprestimos', 'usuarios', 'relatorios'],
+            'Admin': ['dashboard', 'perfil', 'acervo', 'reservas', 'emprestimos', 'usuarios', 'relatorios', 'agendamentos', 'calendario', 'atividades', 'avaliacoes', 'solicitacoes'],
+            'Bibliotecário': ['dashboard', 'perfil', 'acervo', 'agendamentos', 'calendario', 'emprestimos', 'usuarios', 'relatorios', 'solicitacoes'],
             'Professor(a)': ['dashboard', 'perfil', 'acervo', 'relatorios', 'agendamentos', 'calendario', 'atividades', 'avaliacoes'],
-            'Leitor(a)': ['perfil', 'acervo', 'meus-emprestimos', 'atividades', 'avaliacoes']
+            'Aluno(a)': ['perfil', 'acervo', 'meus-emprestimos', 'atividades', 'avaliacoes']
         };
         const allowed = allowedSectionsMap[currentUser.role];
         
+        // This check ensures that if an invalid section is requested, it defaults to the first allowed one.
         if (!allowed.includes(sectionId)) {
-            sectionId = allowed[0]; 
+            // Find the corresponding nav item to determine if the page is accessible at all, not just via direct nav link
+            const navItemForSection = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
+            // The 'perfil' section is kept for admins to view user details, but has no direct nav link
+            if (sectionId !== 'perfil' || !navItemForSection) {
+               sectionId = allowed[0];
+            }
         }
         
         document.querySelectorAll(".tab-content").forEach(s => {
@@ -2979,7 +3245,6 @@
           const classification = document.getElementById('classificationFilter').value;
           renderAcervo(searchTerm, classification);
         }
-        if (sectionId === 'perfil' && changeHistory) renderProfile(currentUser.uid); 
         if (sectionId === 'reservas') renderReservations();
         if (sectionId === 'emprestimos') renderLoans();
         if (sectionId === 'usuarios') renderUsers();
@@ -2988,6 +3253,7 @@
         if (sectionId === 'meus-emprestimos') renderMeusEmprestimos();
         if (sectionId === 'avaliacoes') renderAvaliacoes();
         if (sectionId === 'atividades') renderAtividades();
+        if (sectionId === 'solicitacoes') renderSolicitacoes();
         if (sectionId === 'calendario') {
             currentCalendarDate = new Date();
             renderCalendario();
@@ -2998,11 +3264,7 @@
         const navItem = e.target.closest(".nav-item");
         if (navItem) { 
             e.preventDefault();
-            if (navItem.dataset.section === 'perfil') {
-                showUserProfile(currentUser.uid);
-            } else {
-                switchTab(navItem.dataset.section);
-            }
+            switchTab(navItem.dataset.section);
         }
       });
       
@@ -3026,9 +3288,12 @@
       document.getElementById("btnViewReports").onclick = () => switchTab('relatorios');
       document.getElementById("btnNewSchedule").onclick = showAddScheduleModal;
       document.getElementById("btnDownloadReport").onclick = generateReportPDF;
+      document.getElementById("reloadBtn").onclick = handleReload;
+      document.getElementById("changePasswordBtn").onclick = showChangePasswordModal;
       
       document.getElementById("loginForm").addEventListener('submit', handleLogin);
       document.getElementById("logoutBtn").addEventListener('click', handleLogout);
+      document.getElementById("forgotPasswordBtn").addEventListener('click', handleForgotPassword);
   
       showRegisterBtn.addEventListener('click', (e) => {
           e.preventDefault();
